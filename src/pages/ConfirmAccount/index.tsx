@@ -61,7 +61,7 @@ export default function SignUp() {
       const error = err as AxiosError;
       toast({
         title: 'Erro ao realizar cadastro!',
-        description: error?.response.data.message,
+        description: error?.response?.data.message,
         status: 'error',
         duration: 9000,
         isClosable: true,
@@ -81,6 +81,7 @@ export default function SignUp() {
       <Flex flex={1} align={'center'} justify={'center'}>
         <Stack
           as='form'
+          // @ts-ignore
           onSubmit={handleSubmit(handleSignUp)}
           bgColor='white'
           p={8}

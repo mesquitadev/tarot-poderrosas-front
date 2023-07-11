@@ -1,5 +1,5 @@
 import { Switch } from 'react-router-dom';
-import { ConfirmAccount, SignIn, SignUp } from '@/pages';
+import { ConfirmAccount, SignUp } from '@/pages';
 import Route from './Route';
 
 function Routes() {

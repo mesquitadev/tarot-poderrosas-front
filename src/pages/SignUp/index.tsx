@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import * as yup from 'yup';
 import { useLoading } from '@/hooks/useLoading';
 
@@ -12,7 +12,7 @@ import { AxiosError } from 'axios';
 import api from '@/services';
 import { useHistory } from 'react-router-dom';
 
-interface SignUpFormData {
+type SignUpFormData = {
   firstName: string;
   lastName: string;
   cpf: string;
@@ -67,7 +67,7 @@ export default function SignUp() {
 
   const { errors } = formState;
   const history = useHistory();
-  const handleSignUp = async (values: SignUpFormData) => {
+  const handleSignUp: SubmitHandler<SignUpFormData>  = async (values: SignUpFormData) => {
     try {
       setLoading(true);
       values.cpf = removeMask(values.cpf);
@@ -78,7 +78,7 @@ export default function SignUp() {
       // @ts-ignore
       toast({
         title: 'Erro ao realizar cadastro!',
-        description: error?.response.data.message,
+        description: error?.response?.data.message,
         status: 'error',
         duration: 9000,
         isClosable: true,
@@ -124,6 +124,7 @@ export default function SignUp() {
     },
   ];
 
+
   return (
     <Stack
       minH={'100vh'}
@@ -134,6 +135,7 @@ export default function SignUp() {
       <Flex flex={1} align={'center'} justify={'center'}>
         <Stack
           as='form'
+          // @ts-ignore
           onSubmit={handleSubmit(handleSignUp)}
           bgColor='white'
           p={8}
