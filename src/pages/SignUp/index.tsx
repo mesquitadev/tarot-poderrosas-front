@@ -21,7 +21,7 @@ type SignUpFormData = {
   gender: string;
   email: string;
   password: string;
-}
+};
 
 export default function SignUp() {
   const signInFormSchema = yup.object().shape({
@@ -67,15 +67,15 @@ export default function SignUp() {
 
   const { errors } = formState;
   const history = useHistory();
-  const handleSignUp: SubmitHandler<SignUpFormData>  = async (values: SignUpFormData) => {
+  const handleSignUp: SubmitHandler<SignUpFormData> = async (values: SignUpFormData) => {
     try {
       setLoading(true);
       values.cpf = removeMask(values.cpf);
       await api.post('/users', values);
+      setLoading(false);
       history.push('/confirm-account');
     } catch (err) {
       const error = err as AxiosError;
-      // @ts-ignore
       toast({
         title: 'Erro ao realizar cadastro!',
         description: error?.response?.data.message,
@@ -85,6 +85,8 @@ export default function SignUp() {
         position: 'top-right',
       });
 
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
   };
@@ -123,7 +125,6 @@ export default function SignUp() {
       label: 'Prefiro não responder',
     },
   ];
-
 
   return (
     <Stack

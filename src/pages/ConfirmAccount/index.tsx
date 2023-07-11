@@ -47,19 +47,20 @@ export default function SignUp() {
   const handleSignUp = async (values: SignUpFormData) => {
     try {
       setLoading(true);
-      values.status = true,
+      values.status = true
       api.patch(`/users/${values.pinCode}`, values);
-      toast({
-        title: 'Sucesso',
-        description: 'Conta confirmada!',
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-right'
-      });
-      // history.push(validate ? '/confirm' : '/pending-subscription');
+      // toast({
+      //   title: 'Sucesso',
+      //   description: 'Conta confirmada!',
+      //   status: 'success',
+      //   duration: 9000,
+      //   isClosable: true,
+      //   position: 'top-right'
+      // });
+      setLoading(false)
     } catch (err) {
       const error = err as AxiosError;
+      console.log('errr', err)
       toast({
         title: 'Erro ao realizar cadastro!',
         description: error?.response?.data.message,
