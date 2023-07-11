@@ -5,11 +5,12 @@ import { useLoading } from '@/hooks/useLoading';
 
 import { Button, Flex, Heading, HStack, Image, Stack, useToast, VStack } from '@chakra-ui/react';
 import { Input, Select } from '@/components';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import logo from '@/assets/images/logo-acai.svg';
 import { removeMask, validarCPF } from '@/utils';
 import { AxiosError } from 'axios';
 import api from '@/services';
+import { useHistory } from 'react-router-dom';
 
 interface SignUpFormData {
   firstName: string;
@@ -65,14 +66,16 @@ export default function SignUp() {
   });
 
   const { errors } = formState;
-
+  const history = useHistory();
   const handleSignUp = async (values: SignUpFormData) => {
     try {
       setLoading(true);
       values.cpf = removeMask(values.cpf);
       await api.post('/users', values);
+      history.push('/confirm-account');
     } catch (err) {
       const error = err as AxiosError;
+      // @ts-ignore
       toast({
         title: 'Erro ao realizar cadastro!',
         description: error?.response.data.message,

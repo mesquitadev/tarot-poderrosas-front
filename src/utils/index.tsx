@@ -41,10 +41,9 @@ export function removeMask(cpf: string): string {
   return cpf.replace(/\D/g, '');
 }
 
-
 export function validarCPF(cpf: string | undefined) {
-  if(!cpf) {
-    return false
+  if (!cpf) {
+    return false;
   }
   cpf = cpf.replace(/\D/g, ''); // Remove caracteres não numéricos
 

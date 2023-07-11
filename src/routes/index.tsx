@@ -5,8 +5,8 @@ import Route from './Route';
 function Routes() {
   return (
     <Switch>
-      <Route exact path='/signup' component={SignUp} />
-      <Route exact path='/' component={SignIn} />
+      <Route exact path='/' component={SignUp} />
+      {/*<Route exact path='/' component={SignIn} />*/}
       <Route exact path='/confirm-account' component={ConfirmAccount} />
       {/* <Route exact path='/confirm' component={Confirm} />
       <Route exact path='/save-to-later' component={SaveToLater} />

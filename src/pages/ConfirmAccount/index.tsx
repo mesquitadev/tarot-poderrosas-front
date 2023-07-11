@@ -5,9 +5,9 @@ import { useLoading } from '@/hooks/useLoading';
 
 import { Button, Center, Flex, Heading, Image, Stack, useToast, VStack } from '@chakra-ui/react';
 import { Input } from '@/components';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import logo from '@/assets/images/logo-acai.svg';
-import { removeMask, validarCPF } from '@/utils';
+import { removeMask } from '@/utils';
 import { AxiosError } from 'axios';
 import api from '@/services';
 
