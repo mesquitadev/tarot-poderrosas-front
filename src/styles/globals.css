@@ -1,0 +1,82 @@
+/*@font-face {*/
+/*  font-family: 'font-name';*/
+/*  src: url('/fonts/font-name.ttf'); // pattern: /directoryName/file.extension*/
+/*}*/
+
+.background {
+    background-image: url("../../public/sunset-hero.png");
+    background-color: #cccccc;
+}
+.background-2 {
+    background-image: url("../../public/background-2.png");
+    background-color: #cccccc;
+    width: 100%;
+    height: 100%;
+}
+
+.bg-1 {
+    background-image: url("../assets/images/Frame.png");
+    width: 100%;
+    height: 100%;
+}
+
+.bg-3 {
+    /*background-image: url("../../public/DSCF5521.png");*/
+    /*background-color: rgba(81, 36, 80, 0.5);*/
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+}
+
+.bg-4 {
+    background-image: url("../../public/frame-2.png");
+    /*background-color: rgba(81, 36, 80, 0.5);*/
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+}
+
+.teste {
+    transform: translate(0%, -50%);
+}
+
+
+/* Estilos para dispositivos com tela menor que 480px */
+
+@media (max-width: 480px) {
+    .teste {
+        transform: translate(0%, 15%);
+    }
+}
+
+/* Estilos para dispositivos com tela entre 480px e 768px */
+
+@media (min-width: 481px) and (max-width: 767px) {
+    .teste {
+        transform: translate(0%, 15%);
+    }
+}
+
+/* Estilos para dispositivos com tela entre 768px e 992px */
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .teste {
+        transform: translate(0%, -50%);
+    }
+}
+
+/* Estilos para dispositivos com tela entre 992px e 1200px */
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .teste {
+        transform: translate(0%, -50%);
+    }
+}
+
+/* Estilos para dispositivos com tela maior que 1200px */
+
+@media (min-width: 1200px) {
+    .teste {
+        transform: translate(0%, -50%);
+    }
+}
