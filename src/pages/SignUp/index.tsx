@@ -1,17 +1,16 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { useLoading } from '@/hooks/useLoading';
-
-import { Button, Flex, Heading, HStack, Image, Stack, useToast, VStack } from '@chakra-ui/react';
-import { Input, Select } from '@/components';
+import { Button, Flex, Heading, HStack, Image, Stack, VStack } from '@chakra-ui/react';
+import {Checkbox, Input, Select} from '@/components';
 import { useEffect, useState } from 'react';
 import logo from '@/assets/images/logo-acai.svg';
 import { removeMask, validarCPF } from '@/utils';
 import { AxiosError } from 'axios';
 import api from '@/services';
 import { useHistory } from 'react-router-dom';
-
+import { enqueueSnackbar } from 'notistack';
 type SignUpFormData = {
   firstName: string;
   lastName: string;
@@ -32,6 +31,9 @@ export default function SignUp() {
       .required('Este campo é obrigatório')
       .test('test-invalid-cpf', 'CPF Inválido', (cpf: string | undefined) => validarCPF(cpf)),
     email: yup.string().required('Este campo é obrigatório').email('E-mail inválido'),
+    phone: yup.string().required('Este campo é obrigatório'),
+    birthdate: yup.string().required('Este campo é obrigatório'),
+    gender: yup.string().required('Este campo é obrigatório'),
     password: yup
       .string()
       .required('Senha obrigatória')
@@ -41,6 +43,10 @@ export default function SignUp() {
       .string()
       .required('A confirmação da senha é obrigatoria!')
       .oneOf([yup.ref('password'), null], 'As senhas digitadas não conferem'),
+    termsAndConditions: yup
+      .boolean()
+      .required('Você precisa aceitar os termos e condições')
+      .oneOf([true], 'Você precisa aceitar os termos e condições'),
   });
 
   const [imageUrl, setImageUrl] = useState('');
@@ -58,8 +64,7 @@ export default function SignUp() {
   }, []);
 
   const { loading, setLoading } = useLoading();
-  const toast = useToast();
-  const { handleSubmit, formState, control } = useForm({
+  const { handleSubmit, formState, control, reset } = useForm({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
     resolver: yupResolver(signInFormSchema),
@@ -71,20 +76,27 @@ export default function SignUp() {
     try {
       setLoading(true);
       values.cpf = removeMask(values.cpf);
-      await api.post('/users', values);
+      await api.post('/register', values);
+
       setLoading(false);
-      history.push('/confirm-account');
+      enqueueSnackbar(`Conta criada com sucesso!!`, {
+        variant: 'success',
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+      });
+      reset();
+      history.push('/sucesso');
     } catch (err) {
       const error = err as AxiosError;
-      toast({
-        title: 'Erro ao realizar cadastro!',
-        description: error?.response?.data.message,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        position: 'top-right',
+      enqueueSnackbar(`Erro ao realizar cadastro! Erro: ${error?.response?.data.message}`, {
+        variant: 'error',
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
       });
-
       setLoading(false);
     } finally {
       setLoading(false);
@@ -93,32 +105,12 @@ export default function SignUp() {
 
   const genderOptions = [
     {
-      value: 'Heterossexual',
-      label: 'Heterossexual',
+      value: 'Masculino',
+      label: 'Masculino',
     },
     {
-      value: 'Homossexual',
-      label: 'Homossexual',
-    },
-    {
-      value: 'Assexual',
-      label: 'Assexual',
-    },
-    {
-      value: 'Bissexual',
-      label: 'Bissexual',
-    },
-    {
-      value: 'Queer',
-      label: 'Queer',
-    },
-    {
-      value: 'Omnissexual',
-      label: 'Omnissexual',
-    },
-    {
-      value: 'Panssexual',
-      label: 'Panssexual',
+      value: 'Feminino',
+      label: 'Feminino',
     },
     {
       value: 'Prefiro não responder',
@@ -133,9 +125,10 @@ export default function SignUp() {
       bgColor='primary.dark'
       className='bg-1'
     >
-      <Flex flex={1} align={'center'} justify={'center'}>
+      <Flex flex={1} align={'center'} justify={'center'} my={10}>
         <Stack
           as='form'
+          autoComplete='off'
           // @ts-ignore
           onSubmit={handleSubmit(handleSignUp)}
           bgColor='white'
@@ -193,7 +186,7 @@ export default function SignUp() {
               name='gender'
               control={control}
               errors={errors.gender && errors.gender.message}
-              label={'Gênero'}
+              label={'Sexo'}
             />
           </HStack>
           <Input
@@ -217,6 +210,13 @@ export default function SignUp() {
             errors={errors.passwordConfirmation && errors.passwordConfirmation.message}
             label={'Confirmar Senha'}
           />
+          <Checkbox
+            name='termsAndConditions'
+            control={control}
+            errors={errors.termsAndConditions && errors.termsAndConditions.message}
+            label={'Termos e Condições'}
+            placeholder='Aceitar Termos e Condições'
+          />
           <Stack spacing={6}>
             <Button
               type='submit'
@@ -231,12 +231,12 @@ export default function SignUp() {
 
             <VStack>
               <Heading fontSize={'sm'}> ClubSunset &copy; Montreal Tecnologia</Heading>
-              <Heading fontSize={'sm'}>v1.0.0</Heading>
+              <Heading fontSize={'sm'}>v1.0.1</Heading>
             </VStack>
           </Stack>
         </Stack>
       </Flex>
-      <Flex flex={1} display={{ base: 'none', sm: 'none', md: 'flex' }}>
+      <Flex flex={1} display={{ base: 'none', sm: 'none', md: 'flex' }} maxH='100%'>
         <Image alt={'Login Image'} objectFit={'cover'} src={imageUrl} />
       </Flex>
     </Stack>

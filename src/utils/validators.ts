@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 export function validaCPF(cpf: string) {
-  cpf = cpf.replace(/[^\d]+/g, '');
+  cpf = cpf.replace(/\D+/g, '');
 
   if (cpf === '') return false;
 

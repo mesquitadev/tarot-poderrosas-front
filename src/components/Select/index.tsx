@@ -1,6 +1,7 @@
-import { FormControl, FormErrorMessage, FormLabel } from '@chakra-ui/react';
+import { Box, FormControl, FormErrorMessage, FormLabel } from '@chakra-ui/react';
 import { Select } from 'chakra-react-select';
 import { Controller } from 'react-hook-form';
+import { HiXCircle } from 'react-icons/hi';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Option = ({ control, name, label, options, placeholder, isMulti, ...rest }: any) => {
@@ -10,7 +11,11 @@ const Option = ({ control, name, label, options, placeholder, isMulti, ...rest }
       name={name}
       render={({ field: { onChange, onBlur, value, name, ref }, fieldState: { error } }) => (
         <FormControl py={4} isInvalid={!!error}>
-          {label && <FormLabel>{label}</FormLabel>}
+          {label && (
+            <FormLabel htmlFor={name} _invalid={{ color: 'negative.pure !important' }}>
+              {label}
+            </FormLabel>
+          )}
 
           {isMulti ? (
             <Select
@@ -40,8 +45,16 @@ const Option = ({ control, name, label, options, placeholder, isMulti, ...rest }
               {...rest}
             />
           )}
-
-          <FormErrorMessage>{error && error.message}</FormErrorMessage>
+          {error && (
+            <Box mt='1' mb={{ base: '4', md: '6' }}>
+              <FormErrorMessage mb='4' color='negative.pure' gap='1' ml='1'>
+                <>
+                  <HiXCircle />
+                  {error.message}
+                </>
+              </FormErrorMessage>
+            </Box>
+          )}
         </FormControl>
       )}
     />

@@ -1,26 +1,31 @@
-import { FieldValues } from 'react-hook-form';
-import { Checkbox } from 'antd';
-import React, { useCallback } from 'react';
-import CustomField, { ICustomComponentProps, CustomFieldRenderArgs } from '../Field';
+import {
+  Checkbox as ChakraCheckbox,
+  CheckboxGroup,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+} from '@chakra-ui/react';
 
-export interface ICustomCheckboxProps<T extends FieldValues> extends ICustomComponentProps<T> {
-  /** Antd @type {Checkbox} props */
-  checkboxProps?: React.ComponentProps<typeof Checkbox>;
-}
+import { Controller } from 'react-hook-form';
 
-const CustomCheckbox = <T extends FieldValues>({
-  checkboxProps,
-  disabled,
-  ...rest
-}: ICustomCheckboxProps<T>) => {
-  const _render = useCallback(
-    ({ field }: Partial<CustomFieldRenderArgs>) => (
-      <Checkbox {...field} {...checkboxProps} disabled={disabled} checked={!!field?.value} />
-    ),
-    [checkboxProps, disabled],
+const Checkbox = ({ control, name, label, placeholder, options, defaultValue, ...rest }: any) => {
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={({ field: { onChange, value, name, ref }, fieldState: { error } }) => (
+        <FormControl py={4} isInvalid={!!error}>
+          {label && <FormLabel>{label}</FormLabel>}
+
+          <CheckboxGroup name={name} ref={ref} value={value} defaultValue={defaultValue} {...rest}>
+            <ChakraCheckbox onChange={(value) => onChange(value)}>{placeholder}</ChakraCheckbox>
+          </CheckboxGroup>
+
+          <FormErrorMessage>{error && error.message}</FormErrorMessage>
+        </FormControl>
+      )}
+    />
   );
-
-  return <CustomField {...rest} render={_render} />;
 };
 
-export default CustomCheckbox;
+export default Checkbox;
