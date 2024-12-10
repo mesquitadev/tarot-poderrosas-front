@@ -41,7 +41,6 @@ export const Card = ({
             src={suggested_music}
             width='100%'
             height='130'
-            frameBorder='0'
             allow='autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
             loading='lazy'
           ></iframe>
@@ -102,7 +101,7 @@ export default function CardOfDay() {
             </li>
             <li>
               <p className='text-sm text-custom-gray-text'>
-                4. Ao revelar a carta, observe sua imagem e simbolismos. Pergunte a si mesma: "O que
+                4. Ao revelar a carta, observe sua imagem e simbolismos. Pergunte a si mesma: O que
                 esta carta está tentando me mostrar?
               </p>
             </li>

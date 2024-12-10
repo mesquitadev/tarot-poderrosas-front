@@ -14,12 +14,12 @@ interface IRouteProps extends ReactDOMRouteProps {
 }
 
 const Route: React.FC<IRouteProps> = ({ isPrivate = false, component: Component, ...rest }) => {
-  const { token } = useAuth();
+  const { authToken } = useAuth();
   return (
     <ReactDOMRoute
       {...rest}
       render={({ location }) => {
-        if (token && isPrivate) {
+        if (authToken && isPrivate) {
           return (
             <SidebarLayout>
               <Component />
@@ -27,7 +27,7 @@ const Route: React.FC<IRouteProps> = ({ isPrivate = false, component: Component,
           );
         }
 
-        return isPrivate === !!token ? (
+        return isPrivate === !!authToken ? (
           <Component />
         ) : (
           <Redirect

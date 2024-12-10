@@ -35,10 +35,10 @@ const Login = () => {
               </label>
               <input
                 className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                id='identifier'
+                id='email'
                 type='text'
                 placeholder='Email'
-                {...register('identifier')}
+                {...register('email')}
                 required
               />
             </div>

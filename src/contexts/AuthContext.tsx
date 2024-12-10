@@ -5,7 +5,7 @@ import { useLoading } from '@/hooks/useLoading';
 import { useSnackbar } from 'notistack';
 
 interface User {
-  identifier?: string;
+  email?: string;
   password?: string;
 }
 
@@ -14,12 +14,12 @@ interface AuthState {
 }
 
 interface SignInCredentials {
-  identifier: string;
+  email: string;
   password: string;
 }
 
 export interface AuthContextData {
-  token: string;
+  authToken: string;
 
   signIn(credentials: SignInCredentials): Promise<void>;
 
@@ -49,19 +49,19 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   });
 
   const signIn = useCallback(
-    async ({ identifier, password }: User) => {
+    async ({ email, password }: User) => {
       setLoading(true);
-      console.log('signIn', identifier);
-      console.log('signIn', password);
       try {
-        const response = await api.post('auth/local', {
-          identifier,
+        const response = await api.post('auth/login', {
+          email,
           password,
         });
 
-        const { token } = response.data;
-        Cookies.set('poderrosa', response.data.token, { expires: 7 });
-        setData({ token });
+        const { authToken } = response.data;
+        Cookies.set('poderrosa', response.data.authToken, { expires: 7 });
+
+        // @ts-ignore
+        setData({ authToken });
       } catch (err) {
         enqueueSnackbar('Erro na Autenticação, verificar credenciais informadas.', {
           variant: 'error',
@@ -82,7 +82,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   return (
     <AuthContext.Provider
       value={{
-        token: data.token,
+        authToken: data.token,
         signIn,
         signOut,
       }}

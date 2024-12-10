@@ -46,12 +46,6 @@ const SidebarLayout: React.FC<React.PropsWithChildren<unknown>> = ({ children })
           } space-y-6 py-7 px-2 transition-width duration-200 h-full`}
         >
           <nav>
-            {/*<button*/}
-            {/*  onClick={toggleSidebar}*/}
-            {/*  className='bg-gray-700 text-white py-2 px-4 rounded block md:hidden lg:hidden'*/}
-            {/*>*/}
-            {/*  {isSidebarOpen ? 'Collapse' : 'Expand'}*/}
-            {/*</button>*/}
             <Link
               to='/inicio'
               className='py-2.5 px-4 rounded transition duration-200 hover:custom-primary flex items-center'

@@ -6,6 +6,8 @@ import uma_carta from '../../assets/uma-carta.svg';
 import tres_cartas from '../../assets/tres-cartas.svg';
 import cinco_cartas from '../../assets/cinco-cartas.svg';
 import { useHistory } from 'react-router';
+import { useCallback, useEffect, useState } from 'react';
+import axios from 'axios';
 
 const WeekDays = () => {
   const daysOfWeek = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
@@ -36,6 +38,17 @@ const WeekDays = () => {
 
 export default function SignUp() {
   const history = useHistory();
+  const [annotations, setAnnotations] = useState<any>([]);
+
+  const handleGetAnnotations = useCallback(async () => {
+    const response = await axios.get('/minhas_anotacoes');
+    setAnnotations(response.data);
+  }, []);
+
+  useEffect(() => {
+    handleGetAnnotations();
+  }, [handleGetAnnotations]);
+  // @ts-ignore
   return (
     <>
       <div className='grid grid-cols-1 sm:grid-cols-7 md:grid-cols-2 lg:grid-cols-7 gap-4'>
@@ -102,8 +115,11 @@ export default function SignUp() {
             <p className='text-custom-primary'>Minhas Anotações</p>
           </div>
           <div className='grid grid-cols-2 gap-2 sm:grid-cols-1 lg:grid-cols-2'>
-            <div className='p-4 rounded-lg h-[229px] w-full bg-custom-start'>Column 2.1</div>
-            <div className='bg-custom-primary p-4 rounded-lg h-[229px]'>Column 2.1</div>
+            {annotations.map((annotation: any) => (
+              <div key={annotation.id} className='bg-white p-2 rounded-lg shadow-md'>
+                <p className='text-md font-playfair'>{annotation.descricao}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
