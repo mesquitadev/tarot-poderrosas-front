@@ -1,13 +1,8 @@
-import { addDays, format, startOfWeek } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-
-import banner from '../../assets/Topo_PoderRosa_Aprovar.svg';
 import back_carta_do_dia from '../../assets/back-carta-do-dia.svg';
 import back_tres_cartas from '../../assets/back_tres_cartas.svg';
 import back_cinco_cartas from '../../assets/back_cinco_cartas.svg';
 
 import './style.css';
-import { useState } from 'react';
 
 export const Card = ({
   background,
@@ -28,15 +23,6 @@ export const Card = ({
 };
 
 export default function SignUp() {
-  const [flipped, setFlipped] = useState([false, false, false]);
-
-  const handleFlip = (index: number) => {
-    setFlipped((prev) => {
-      const newFlipped = [...prev];
-      newFlipped[index] = !newFlipped[index];
-      return newFlipped;
-    });
-  };
   return (
     <>
       <div className='flex flex-col  w-full h-full text-center'>
@@ -54,7 +40,6 @@ export default function SignUp() {
 '
             />
             <Card
-              onClick={() => handleFlip(2)}
               background={back_cinco_cartas}
               subtitle='Objetivo: Receber uma visão aprofundada sobre um desafio ou decisão importante.
 '

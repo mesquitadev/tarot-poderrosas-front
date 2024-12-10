@@ -1,6 +1,3 @@
-import back_tarot_poderrosa from '../../assets/back_tarot_poderrosa.svg';
-import * as Dialog from '@radix-ui/react-dialog';
-
 import './style.css';
 import { useEffect, useState } from 'react';
 import { getCardOfTheDay } from '@/utils';

@@ -2,7 +2,7 @@ import { createContext, ReactNode, useCallback, useState } from 'react';
 import Cookies from 'js-cookie';
 import api from '@/services';
 import { useLoading } from '@/hooks/useLoading';
-import { enqueueSnackbar, useSnackbar } from 'notistack';
+import { useSnackbar } from 'notistack';
 
 interface User {
   identifier?: string;

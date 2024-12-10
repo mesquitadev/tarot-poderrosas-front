@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { FaHome, FaUser, FaCog, FaSignOutAlt, FaStar, FaEdit, FaCalendar } from 'react-icons/fa';
+import { FaCalendar, FaEdit, FaHome, FaSignOutAlt, FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 import logo from '../../assets/PoderRosa_logo_Branca.svg';
+
 const SidebarLayout: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
