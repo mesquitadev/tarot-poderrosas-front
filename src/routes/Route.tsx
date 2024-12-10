@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 
 import { useAuth } from '@/hooks/useAuth';
+import SidebarLayout from '@/components/Layout';
 
 interface IRouteProps extends ReactDOMRouteProps {
   isPrivate?: boolean;
@@ -19,7 +20,11 @@ const Route: React.FC<IRouteProps> = ({ isPrivate = false, component: Component,
       {...rest}
       render={({ location }) => {
         if (token && isPrivate) {
-          return <Component />;
+          return (
+            <SidebarLayout>
+              <Component />
+            </SidebarLayout>
+          );
         }
 
         return isPrivate === !!token ? (
@@ -27,7 +32,7 @@ const Route: React.FC<IRouteProps> = ({ isPrivate = false, component: Component,
         ) : (
           <Redirect
             to={{
-              pathname: isPrivate ? '/' : '/home',
+              pathname: isPrivate ? '/' : '/inicio',
               state: { from: location },
             }}
           />

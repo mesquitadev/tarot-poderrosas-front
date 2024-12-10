@@ -2,9 +2,10 @@ import { createContext, ReactNode, useCallback, useState } from 'react';
 import Cookies from 'js-cookie';
 import api from '@/services';
 import { useLoading } from '@/hooks/useLoading';
+import { enqueueSnackbar, useSnackbar } from 'notistack';
 
 interface User {
-  email?: string;
+  identifier?: string;
   password?: string;
 }
 
@@ -13,7 +14,7 @@ interface AuthState {
 }
 
 interface SignInCredentials {
-  email: string;
+  identifier: string;
   password: string;
 }
 
@@ -33,10 +34,12 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const { setLoading } = useLoading();
+  const { enqueueSnackbar } = useSnackbar();
+
   // const toast = useToast();
 
   const [data, setData] = useState<AuthState>(() => {
-    const token = Cookies.get('positivo.token');
+    const token = Cookies.get('poderrosas.token');
 
     if (token) {
       return { token };
@@ -46,35 +49,33 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   });
 
   const signIn = useCallback(
-    async ({ email, password }: User) => {
+    async ({ identifier, password }: User) => {
       setLoading(true);
+      console.log('signIn', identifier);
+      console.log('signIn', password);
       try {
-        const response = await api.post('auth/login', {
-          email,
+        const response = await api.post('auth/local', {
+          identifier,
           password,
         });
 
         const { token } = response.data;
-        Cookies.set('positivo.token', response.data.token, { expires: 7 });
+        Cookies.set('poderrosa', response.data.token, { expires: 7 });
         setData({ token });
       } catch (err) {
-        // toast({
-        //   title: 'Erro na Autenticação.',
-        //   description: 'Ocorreu um erro ao fazer login, verifique as credenciais inseridas,',
-        //   status: 'error',
-        //   duration: 9000,
-        //   isClosable: true,
-        // });
+        enqueueSnackbar('Erro na Autenticação, verificar credenciais informadas.', {
+          variant: 'error',
+        });
         setLoading(false);
       } finally {
         setLoading(false);
       }
     },
-    [setLoading],
+    [enqueueSnackbar, setLoading],
   );
 
   const signOut = useCallback(() => {
-    Cookies.remove('positivo.token');
+    Cookies.remove('poderrosas.token');
     setData({} as AuthState);
   }, []);
 
