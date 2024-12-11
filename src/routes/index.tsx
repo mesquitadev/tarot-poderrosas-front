@@ -1,5 +1,16 @@
 import { Switch } from 'react-router-dom';
-import { CardOfDay, FiveCards, Home, SignUp, Tarot, ThreeCards } from '@/pages';
+import {
+  CardOfDay,
+  DesafioDoDia,
+  EditarAnotacao,
+  FiveCards,
+  Home,
+  MinhasAnotacoes,
+  NovaAnotacao,
+  SignUp,
+  Tarot,
+  ThreeCards,
+} from '@/pages';
 import Route from './Route';
 
 function Routes() {
@@ -11,7 +22,10 @@ function Routes() {
       <Route exact isPrivate path='/tarot/carta-do-dia' component={CardOfDay} />
       <Route exact isPrivate path='/tarot/tres-cartas' component={ThreeCards} />
       <Route exact isPrivate path='/tarot/cinco-cartas' component={FiveCards} />
-      {/*<Route exact path='/politica-privacidade' component={PrivacyPolicy} />*/}
+      <Route exact isPrivate path='/minhas-anotacoes' component={MinhasAnotacoes} />
+      <Route exact isPrivate path='/minhas-anotacoes/nova' component={NovaAnotacao} />
+      <Route exact isPrivate path='/minhas-anotacoes/editar/:id' component={EditarAnotacao} />
+      <Route exact isPrivate path='/desafio-do-dia' component={DesafioDoDia} />
     </Switch>
   );
 }

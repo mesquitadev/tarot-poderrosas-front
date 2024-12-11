@@ -4,6 +4,8 @@ import back_cinco_cartas from '../../assets/back_cinco_cartas.svg';
 
 import './style.css';
 import { useHistory } from 'react-router';
+import VideoModal from '@/components/VIdeoModal';
+import { useState } from 'react';
 
 export const Card = ({
   background,
@@ -27,13 +29,17 @@ export const Card = ({
 
 export default function SignUp() {
   const history = useHistory();
+  const [isModalOpen, setIsModalOpen] = useState(true);
+
+  const closeModal = () => setIsModalOpen((state) => !state);
+
   return (
     <>
-      <div className='flex flex-col  w-full h-full text-center'>
+      <div className='flex flex-col w-full h-full text-center'>
         <p className='text-md'>Desperte sua Intuição</p>
         <p className='text-sm'>Escolha suas cartas e conecte-se com sua sabedoria interior</p>
         <div className='flex flex-col justify-items-center justify-center w-full h-full'>
-          <div className='grid grid-cols-3 justify-around justify-items-center gap-x-4 w-full'>
+          <div className='grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3  justify-around justify-items-center gap-x-4 w-full'>
             <Card
               onClick={() => history.push('/tarot/carta-do-dia')}
               background={back_carta_do_dia}
@@ -42,8 +48,7 @@ export default function SignUp() {
             <Card
               onClick={() => history.push('/tarot/tres-cartas')}
               background={back_tres_cartas}
-              subtitle='Objetivo: Compreender melhor uma situação específica em sua vida.
-'
+              subtitle='Objetivo: Compreender melhor uma situação específica em sua vida.'
             />
             <Card
               onClick={() => history.push('/tarot/cinco-cartas')}
@@ -53,6 +58,11 @@ export default function SignUp() {
           </div>
         </div>
       </div>
+      <VideoModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        videoUrl='https://www.youtube.com/embed/dQw4w9WgXcQ'
+      />
     </>
   );
 }

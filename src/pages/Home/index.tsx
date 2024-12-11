@@ -6,8 +6,8 @@ import uma_carta from '../../assets/uma-carta.svg';
 import tres_cartas from '../../assets/tres-cartas.svg';
 import cinco_cartas from '../../assets/cinco-cartas.svg';
 import { useHistory } from 'react-router';
-import { useCallback, useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useCallback, useEffect, useState } from 'react';
+import api from '@/services';
 
 const WeekDays = () => {
   const daysOfWeek = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
@@ -41,14 +41,16 @@ export default function SignUp() {
   const [annotations, setAnnotations] = useState<any>([]);
 
   const handleGetAnnotations = useCallback(async () => {
-    const response = await axios.get('/minhas_anotacoes');
+    const response = await api.get('/diary');
     setAnnotations(response.data);
   }, []);
 
   useEffect(() => {
     handleGetAnnotations();
   }, [handleGetAnnotations]);
-  // @ts-ignore
+
+  const bgColors = ['bg-custom-start', 'bg-custom-primary'];
+
   return (
     <>
       <div className='grid grid-cols-1 sm:grid-cols-7 md:grid-cols-2 lg:grid-cols-7 gap-4'>
@@ -114,10 +116,21 @@ export default function SignUp() {
           <div className='mb-5'>
             <p className='text-custom-primary'>Minhas Anotações</p>
           </div>
-          <div className='grid grid-cols-2 gap-2 sm:grid-cols-1 lg:grid-cols-2'>
-            {annotations.map((annotation: any) => (
-              <div key={annotation.id} className='bg-white p-2 rounded-lg shadow-md'>
-                <p className='text-md font-playfair'>{annotation.descricao}</p>
+          <div className='grid grid-cols-3 gap-4'>
+            {annotations?.slice(0, 3).map((annotation: any, index: number) => (
+              <div
+                key={annotation.id}
+                className={`${
+                  bgColors[index % bgColors.length]
+                } p-3 rounded-lg shadow-md min-h-[200px] flex flex-col justify-between`}
+              >
+                <p className='text-md text-gray-50'>{annotation.title}</p>
+                <div>
+                  <p className='text-sm text-gray-50'>{annotation.createdAt}</p>
+                  <p className='text-sm text-gray-50 text-wrap break-words line-clamp-4'>
+                    {annotation.content}
+                  </p>
+                </div>
               </div>
             ))}
           </div>

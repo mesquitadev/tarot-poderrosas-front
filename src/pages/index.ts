@@ -1,7 +1,10 @@
 export { default as SignUp } from './SignIn';
-export { default as ConfirmAccount } from './ConfirmAccount';
+export { default as MinhasAnotacoes } from './MinhasAnotacoes';
+export { default as NovaAnotacao } from './MinhasAnotacoes/Nova';
+export { default as EditarAnotacao } from './MinhasAnotacoes/Editar';
 export { default as Tarot } from './Tarot';
 export { default as CardOfDay } from './CardOfDay';
 export { default as ThreeCards } from './ThreeCards';
 export { default as FiveCards } from './FiveCards';
 export { default as Home } from './Home';
+export { default as DesafioDoDia } from './Challenge';

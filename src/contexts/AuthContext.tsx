@@ -19,7 +19,7 @@ interface SignInCredentials {
 }
 
 export interface AuthContextData {
-  authToken: string;
+  token: string;
 
   signIn(credentials: SignInCredentials): Promise<void>;
 
@@ -57,11 +57,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
           password,
         });
 
-        const { authToken } = response.data;
-        Cookies.set('poderrosa', response.data.authToken, { expires: 7 });
+        const { token } = response.data;
+        Cookies.set('poderrosas.token', response.data.token, { expires: 7 });
 
         // @ts-ignore
-        setData({ authToken });
+        setData({ token });
       } catch (err) {
         enqueueSnackbar('Erro na Autenticação, verificar credenciais informadas.', {
           variant: 'error',
@@ -82,7 +82,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   return (
     <AuthContext.Provider
       value={{
-        authToken: data.token,
+        token: data.token,
         signIn,
         signOut,
       }}
