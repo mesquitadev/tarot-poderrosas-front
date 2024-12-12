@@ -1,55 +1,7 @@
 import './style.css';
 import { useState } from 'react';
 import { getThreeCards } from '@/utils';
-
-export const Card = ({
-  img,
-  title,
-  article,
-  suggested_music,
-  blend,
-  power,
-}: {
-  img: string;
-  title: string;
-  article: string;
-  suggested_music: string;
-  blend: string;
-  power: string;
-}) => {
-  return (
-    <div className='justify-items-center m-2 text-center'>
-      <img src={img} className='w-80 h-80 sm:w-80 sm:h-80' alt='' />
-      <p className='text-lg font-bold mt-2'>{title}</p>
-      <p className='text-sm text-custom-gray-text mt-1'>{article}</p>
-      {blend && (
-        <div className='mt-4'>
-          <p className='text-sm text-custom-gray-text'>{blend}</p>
-        </div>
-      )}
-      {power && (
-        <div className='mt-4'>
-          <p className='text-sm text-custom-gray-text'>{power}</p>
-        </div>
-      )}
-      {suggested_music && (
-        <div className='mt-10'>
-          <p className='mb-2'>Música Sugerida:</p>
-          <iframe
-            title='music'
-            style={{ borderRadius: '10px' }}
-            src={suggested_music}
-            width='100%'
-            height='130'
-            frameBorder='0'
-            allow='autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
-            loading='lazy'
-          ></iframe>
-        </div>
-      )}
-    </div>
-  );
-};
+import Card from '@/components/Card';
 
 export default function ThreeCards() {
   const [cards, setCards] = useState(getThreeCards());

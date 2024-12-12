@@ -1,55 +1,7 @@
 import './style.css';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getCardOfTheDay } from '@/utils';
-
-export const Card = ({
-  img,
-  title,
-  article,
-  suggested_music,
-  blend,
-  power,
-}: {
-  img: string;
-  title: string;
-  article: string;
-  suggested_music: string;
-  blend: string;
-  power: string;
-}) => {
-  return (
-    <div className='justify-items-center m-2 text-center'>
-      <img src={img} className='w-80 h-80 sm:w-80 sm:h-80' alt='' />
-      <p className='text-lg font-bold mt-2'>{title}</p>
-      <p className='text-sm text-custom-gray-text mt-1'>{article}</p>
-      {blend && (
-        <div className='mt-4'>
-          <p className='text-sm text-custom-gray-text'>{blend}</p>
-        </div>
-      )}
-      {power && (
-        <div className='mt-4'>
-          <p className='text-sm text-custom-gray-text'>{power}</p>
-        </div>
-      )}
-      {suggested_music && (
-        <div className='mt-10 w-full h-full'>
-          <p className='mb-2'>Música Sugerida:</p>
-          <iframe
-            title='music'
-            style={{ borderRadius: '10px' }}
-            src={suggested_music}
-            width='100%'
-            height='130'
-            allow='autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
-            loading='lazy'
-          ></iframe>
-        </div>
-      )}
-    </div>
-  );
-};
-
+import Card from '@/components/Card';
 export default function CardOfDay() {
   const [card, setCard] = useState(getCardOfTheDay());
 
@@ -61,9 +13,6 @@ export default function CardOfDay() {
     <div className='flex flex-col w-full h-full text-center'>
       <div className='flex justify-center items-center w-full relative'>
         <p className='text-md text-custom-gray-text'>Carta do Dia</p>
-        <button className='absolute right-0 text-sm text-white bg-custom-start p-2 rounded'>
-          Tutorial
-        </button>
       </div>
       <p className='text-sm text-custom-gray-text'>
         Receba uma mensagem única para iluminar seu dia <br /> e guiar seus passos com inspiração e
@@ -80,7 +29,7 @@ export default function CardOfDay() {
             power={card.power}
           />
         </div>
-        <div className='flex flex-col bg-custom-gray-light p-5 w-[700px] justify-start text-start rounded-md mt-10'>
+        <div className='flex flex-col bg-custom-gray-light p-5 justify-start text-start rounded-md mt-10'>
           <div className='my-2'>
             <p className='text-center text-custom-gray-text'>Como Jogar?</p>
           </div>

@@ -1,58 +1,12 @@
 import './style.css';
 import { getFiveCards } from '@/utils';
 import { useState } from 'react';
-
-export const Card = ({
-  img,
-  title,
-  article,
-  suggested_music,
-  blend,
-  power,
-}: {
-  img: string;
-  title: string;
-  article: string;
-  suggested_music: string;
-  blend: string;
-  power: string;
-}) => {
-  return (
-    <div className='card w-80 text-center m-2'>
-      <img src={img} className='w-full h-80' alt='' />
-      <p className='text-lg font-bold mt-2'>{title}</p>
-      <p className='text-sm text-custom-gray-text mt-1'>{article}</p>
-      {blend && (
-        <div className='mt-4'>
-          <p className='text-sm text-custom-gray-text'>{blend}</p>
-        </div>
-      )}
-      {power && (
-        <div className='mt-4'>
-          <p className='text-sm text-custom-gray-text'>{power}</p>
-        </div>
-      )}
-      {suggested_music && (
-        <div className='mt-10 w-full'>
-          <p className='mb-2'>Música Sugerida:</p>
-          <iframe
-            title='music'
-            style={{ borderRadius: '10px' }}
-            src={suggested_music}
-            width='100%'
-            height='130'
-            frameBorder='0'
-            allow='autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture'
-            loading='lazy'
-          ></iframe>
-        </div>
-      )}
-    </div>
-  );
-};
+import { useHistory } from 'react-router';
+import Card from '@/components/Card';
 
 export default function FiveCards() {
   const [cards, setCards] = useState(getFiveCards());
+  const history = useHistory();
 
   const handleNewDraw = () => {
     setCards(getFiveCards());
@@ -73,9 +27,22 @@ export default function FiveCards() {
           Descubra novas perspectivas e insights profundos para guiar suas escolhas.
         </p>
 
-        <div className='grid sm:grid-cols-1 gap-4 justify-items-center items-center'>
+        <div className='grid grid-cols-1 sm:grid-cols-3 sm:grid-rows-3 gap-4 justify-items-center items-center'>
           {cards.map((card, index) => (
-            <div key={index}>
+            <div
+              key={index}
+              className={`mb-4 sm:mb-0 ${
+                index === 0
+                  ? 'col-start-1 sm:col-start-2 row-start-1'
+                  : index === 1
+                  ? 'col-start-1 row-start-2'
+                  : index === 2
+                  ? 'col-start-1 row-start-3 sm:col-start-2 sm:row-start-2'
+                  : index === 3
+                  ? 'col-start-1 row-start-4 sm:col-start-3 sm:row-start-2'
+                  : 'col-start-1 row-start-5 sm:col-start-2 sm:row-start-3'
+              }`}
+            >
               <Card
                 img={card.img}
                 title={card.title}
@@ -88,12 +55,21 @@ export default function FiveCards() {
           ))}
         </div>
 
-        <button
-          onClick={handleNewDraw}
-          className='mt-4 text-sm text-white bg-custom-start p-2 rounded'
-        >
-          Nova Tiragem
-        </button>
+        <div className='flex flex-row justify-center'>
+          <button
+            onClick={handleNewDraw}
+            className='mt-4 text-sm text-white bg-custom-start p-2 rounded mr-5'
+          >
+            Nova Tiragem
+          </button>
+
+          <button
+            onClick={() => history.push('/minhas-anotacoes/nova')}
+            className='mt-4 text-sm text-white bg-custom-start p-2 rounded'
+          >
+            Criar Anotação
+          </button>
+        </div>
 
         <div className='flex flex-col bg-custom-gray-light p-5 justify-start text-start rounded-md mt-10'>
           <div className='my-2'>
