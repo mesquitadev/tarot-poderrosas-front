@@ -6,7 +6,7 @@ interface VideoModalProps {
   videoUrl: string;
 }
 
-const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose, videoUrl }) => {
+const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
