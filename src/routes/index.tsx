@@ -1,5 +1,6 @@
 import { Switch } from 'react-router-dom';
 import {
+  AllCards,
   CardOfDay,
   DesafioDoDia,
   EditarAnotacao,
@@ -22,6 +23,7 @@ function Routes() {
       <Route exact isPrivate path='/tarot/carta-do-dia' component={CardOfDay} />
       <Route exact isPrivate path='/tarot/tres-cartas' component={ThreeCards} />
       <Route exact isPrivate path='/tarot/cinco-cartas' component={FiveCards} />
+      <Route exact isPrivate path='/tarot/baralho' component={AllCards} />
       <Route exact isPrivate path='/minhas-anotacoes' component={MinhasAnotacoes} />
       <Route exact isPrivate path='/minhas-anotacoes/nova' component={NovaAnotacao} />
       <Route exact isPrivate path='/minhas-anotacoes/editar/:id' component={EditarAnotacao} />

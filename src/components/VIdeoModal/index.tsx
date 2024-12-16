@@ -6,7 +6,7 @@ interface VideoModalProps {
   videoUrl: string;
 }
 
-const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose }) => {
+const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose, videoUrl }) => {
   if (!isOpen) return null;
 
   return (
@@ -27,9 +27,8 @@ const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose }) => {
           <iframe
             width='100%'
             height='500px'
-            src='https://www.youtube.com/embed/NBSE2mUnMFg?si=330lPgdagXS6mMfo'
+            src={videoUrl}
             title='Dinamica do Tarot'
-            frameBorder='0'
             allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
             referrerPolicy='strict-origin-when-cross-origin'
             allowFullScreen

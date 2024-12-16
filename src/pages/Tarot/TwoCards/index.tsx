@@ -1,6 +1,6 @@
-import back_carta_do_dia from '../../assets/back-carta-do-dia.svg';
-import back_tres_cartas from '../../assets/back_tres_cartas.svg';
-import back_cinco_cartas from '../../assets/back_cinco_cartas.svg';
+import back_carta_do_dia from '../../../assets/back-carta-do-dia.svg';
+import back_tres_cartas from '../../../assets/back_tres_cartas.svg';
+import back_cinco_cartas from '../../../assets/back_cinco_cartas.svg';
 
 import './style.css';
 
@@ -22,7 +22,7 @@ export const Card = ({
   );
 };
 
-export default function SignUp() {
+function TwoCards() {
   return (
     <>
       <div className='flex flex-col  w-full h-full text-center'>
@@ -36,13 +36,11 @@ export default function SignUp() {
             />
             <Card
               background={back_tres_cartas}
-              subtitle='Objetivo: Compreender melhor uma situação específica em sua vida.
-'
+              subtitle='Objetivo: Compreender melhor uma situação específica em sua vida.'
             />
             <Card
               background={back_cinco_cartas}
-              subtitle='Objetivo: Receber uma visão aprofundada sobre um desafio ou decisão importante.
-'
+              subtitle='Objetivo: Receber uma visão aprofundada sobre um desafio ou decisão importante.'
             />
           </div>
         </div>
@@ -50,3 +48,5 @@ export default function SignUp() {
     </>
   );
 }
+
+export default TwoCards;

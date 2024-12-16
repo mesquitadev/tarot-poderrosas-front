@@ -11,6 +11,12 @@ interface User {
 
 interface AuthState {
   token: string;
+  user: {
+    id: number;
+    fullName: string;
+    cpf: string;
+    email: string;
+  };
 }
 
 interface SignInCredentials {
@@ -20,9 +26,13 @@ interface SignInCredentials {
 
 export interface AuthContextData {
   token: string;
-
+  user: {
+    id: number;
+    fullName: string;
+    cpf: string;
+    email: string;
+  };
   signIn(credentials: SignInCredentials): Promise<void>;
-
   signOut(): void;
 }
 
@@ -36,16 +46,23 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const { setLoading } = useLoading();
   const { enqueueSnackbar } = useSnackbar();
 
-  // const toast = useToast();
-
   const [data, setData] = useState<AuthState>(() => {
     const token = Cookies.get('poderrosas.token');
+    const user = Cookies.get('poderrosas.user');
 
-    if (token) {
-      return { token };
+    if (token && user) {
+      return { token, user: JSON.parse(user) };
     }
 
-    return {} as AuthState;
+    return {
+      token: '',
+      user: {
+        id: 0,
+        fullName: '',
+        cpf: '',
+        email: '',
+      },
+    };
   });
 
   const signIn = useCallback(
@@ -57,11 +74,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
           password,
         });
 
-        const { token } = response.data;
-        Cookies.set('poderrosas.token', response.data.token, { expires: 7 });
+        const { token, data: user } = response.data;
+        Cookies.set('poderrosas.token', token, { expires: 7 });
+        Cookies.set('poderrosas.user', JSON.stringify(user), { expires: 7 });
 
-        // @ts-ignore
-        setData({ token });
+        setData({ token, user });
       } catch (err) {
         enqueueSnackbar('Erro na Autenticação, verificar credenciais informadas.', {
           variant: 'error',
@@ -83,6 +100,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     <AuthContext.Provider
       value={{
         token: data.token,
+        user: data.user,
         signIn,
         signOut,
       }}

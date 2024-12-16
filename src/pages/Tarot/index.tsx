@@ -61,7 +61,7 @@ export default function SignUp() {
       <VideoModal
         isOpen={isModalOpen}
         onClose={closeModal}
-        videoUrl='https://www.youtube.com/embed/dQw4w9WgXcQ'
+        videoUrl='https://www.youtube.com/embed/NBSE2mUnMFg?si=330lPgdagXS6mMfo'
       />
     </>
   );

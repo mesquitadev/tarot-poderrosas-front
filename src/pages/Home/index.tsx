@@ -4,25 +4,54 @@ import { ptBR } from 'date-fns/locale';
 import banner from '../../assets/Topo_PoderRosa_Aprovar.svg';
 import uma_carta from '../../assets/uma-carta.svg';
 import tres_cartas from '../../assets/tres-cartas.svg';
-import cinco_cartas from '../../assets/cinco-cartas.svg';
+import cinco_cartas from '../../assets/estrela-cinco-cartas.svg';
 import { useHistory } from 'react-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import api from '@/services';
 
 const WeekDays = () => {
   const daysOfWeek = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
-  const currentDayIndex = (new Date().getDay() + 6) % 7;
   const startDate = startOfWeek(new Date(), { weekStartsOn: 1 });
+  const currentDayIndex = (new Date().getDay() + 6) % 7;
+
+  const [selectedDayIndex, setSelectedDayIndex] = useState<number>(currentDayIndex);
+  const [missions, setMissions] = useState<any[]>([]);
+  const [mission, setMission] = useState<any>(null);
+
+  const fetchMissions = useCallback(async () => {
+    const response = await api.get('/missions');
+    setMissions(response.data);
+  }, []);
+
+  useEffect(() => {
+    fetchMissions();
+  }, [fetchMissions]);
+
+  useEffect(() => {
+    const date = addDays(startDate, currentDayIndex);
+    const formattedDate = format(date, 'd');
+    const currentMission = missions.find((m) => m.day === Number(formattedDate));
+    setMission(currentMission);
+  }, [currentDayIndex, startDate, missions]);
+
+  const handleDayClick = (index: number) => {
+    setSelectedDayIndex(index);
+    const date = addDays(startDate, index);
+    const formattedDate = format(date, 'd');
+    const selectedMission = missions.find((m) => m.day === Number(formattedDate));
+    setMission(selectedMission);
+  };
 
   return (
-    <div className='flex flex-wrap justify-start space-x-2 space-y-2'>
+    <div className='flex flex-wrap justify-start'>
       {daysOfWeek.map((day, index) => {
         const date = addDays(startDate, index);
         return (
           <button
             key={index}
-            className={`p-3 rounded-lg min-w-[80px] ${
-              index === currentDayIndex
+            onClick={() => handleDayClick(index)}
+            className={`p-1 py-2 rounded-lg mr-2 mb-2 min-w-[82px] h-full hover:bg-custom-primary hover:text-white ${
+              index === selectedDayIndex
                 ? 'bg-custom-start text-white'
                 : 'bg-blue-custom text-custom-start'
             }`}
@@ -32,11 +61,20 @@ const WeekDays = () => {
           </button>
         );
       })}
+      {mission && (
+        <div className='mt-6 h-[150px] w-full justify-center items-center'>
+          <div className='mt-2 p-5 w-full h-full bg-gray-50 rounded-md relative items-center'>
+            <div className='absolute left-0 h-20 w-2 bg-custom-start'></div>
+            <p className='text-lg text-white'>{mission?.title}</p>
+            <p className='text-sm text-white'>{mission?.task}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default function SignUp() {
+export default function Home() {
   const history = useHistory();
   const [annotations, setAnnotations] = useState<any>([]);
 
@@ -91,7 +129,7 @@ export default function SignUp() {
               onClick={() => history.push('/tarot/cinco-cartas')}
               className='rounded-lg bg-custom-primary flex flex-row px-5 py-2 text-white justify-center text-start items-center min-w-[300px]'
             >
-              <img src={cinco_cartas} alt='Icone das Cinco cartas' />
+              <img src={cinco_cartas} className='w-[50px]' alt='Icone das Cinco cartas' />
               <div className='mx-4 break-words'>
                 <p className='text-md text-white font-play'>Estrela de Cinco Cartas</p>
                 <p className='text-sm text-white'>Interações e conexões entre duas pessoas.</p>
@@ -127,9 +165,10 @@ export default function SignUp() {
                 <p className='text-md text-gray-50'>{annotation.title}</p>
                 <div>
                   <p className='text-sm text-gray-50'>{annotation.createdAt}</p>
-                  <p className='text-sm text-gray-50 text-wrap break-words line-clamp-4'>
-                    {annotation.content}
-                  </p>
+                  <div
+                    className='text-sm text-gray-50 text-wrap break-words line-clamp-4'
+                    dangerouslySetInnerHTML={{ __html: annotation.content }}
+                  />
                 </div>
               </div>
             ))}

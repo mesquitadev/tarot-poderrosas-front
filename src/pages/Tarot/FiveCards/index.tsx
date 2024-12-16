@@ -3,6 +3,7 @@ import { getFiveCards } from '@/utils';
 import { useState } from 'react';
 import { useHistory } from 'react-router';
 import Card from '@/components/Card';
+import HowToPlay from '@/components/HowToPlay';
 
 export default function FiveCards() {
   const [cards, setCards] = useState(getFiveCards());
@@ -19,15 +20,12 @@ export default function FiveCards() {
           <p className='text-md text-custom-gray-text break-words'>
             Estrela de Cinco Cartas como Conselho para uma Situação
           </p>
-          <button className='absolute right-0 text-sm text-white bg-custom-start p-2 rounded'>
-            Tutorial
-          </button>
         </div>
         <p className='text-sm text-custom-gray-text'>
           Descubra novas perspectivas e insights profundos para guiar suas escolhas.
         </p>
 
-        <div className='grid grid-cols-1 sm:grid-cols-3 sm:grid-rows-3 gap-4 justify-items-center items-center'>
+        <div className='grid grid-cols-1 sm:grid-cols-3 sm:grid-rows-3 gap-4 justify-items-center items-start'>
           {cards.map((card, index) => (
             <div
               key={index}
@@ -46,7 +44,7 @@ export default function FiveCards() {
               <Card
                 img={card.img}
                 title={card.title}
-                article={card.tagline}
+                affirmation={card.affirmation}
                 suggested_music={card.suggested_music}
                 blend={card.blend}
                 power={card.power}
@@ -70,34 +68,7 @@ export default function FiveCards() {
             Criar Anotação
           </button>
         </div>
-
-        <div className='flex flex-col bg-custom-gray-light p-5 justify-start text-start rounded-md mt-10'>
-          <div className='my-2'>
-            <p className='text-center text-custom-gray-text'>Como Jogar?</p>
-          </div>
-          <ul>
-            <li>
-              <p className='text-sm text-custom-gray-text'>
-                1. Em um ambiente tranquilo, respire profundamente e centrar-se em si mesma.
-              </p>
-            </li>
-            <li>
-              <p className='text-sm text-custom-gray-text'>
-                2. Em seguida, olhe bens para todas as cartas , focando na intenção de receber uma
-                mensagem que a guiará durante o dia.
-              </p>
-            </li>
-            <li>
-              <p className='text-sm text-custom-gray-text'>3. Escolha uma única carta.</p>
-            </li>
-            <li>
-              <p className='text-sm text-custom-gray-text'>
-                4. Ao revelar a carta, observe sua imagem e simbolismos. Pergunte a si mesma: "O que
-                esta carta está tentando me mostrar?
-              </p>
-            </li>
-          </ul>
-        </div>
+        <HowToPlay />
       </div>
     </>
   );
