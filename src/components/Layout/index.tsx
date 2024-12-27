@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import {
-  FaCalendar,
-  FaEdit,
-  FaHome,
-  FaSignOutAlt,
-  FaStar,
-  FaInstagram,
-  FaLinkedin,
-  FaPlus,
-  FaList,
-} from 'react-icons/fa';
+import { FaCalendar, FaEdit, FaHome, FaSignOutAlt, FaStar } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
-import { ExclamationTriangleIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, ExclamationTriangleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Cookies from 'js-cookie';
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
 
@@ -22,7 +12,7 @@ import { getGreeting } from '@/utils';
 const SidebarLayout: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [openSignOutModal, setOpenSignOutModal] = useState(false);
-  const [isSubmenuOpen, setIsSubmenuOpen] = useState<{ [key: string]: boolean }>({});
+  // const [isSubmenuOpen, setIsSubmenuOpen] = useState<{ [key: string]: boolean }>({});
   const { signOut } = useAuth();
   const location = useLocation();
 
@@ -48,9 +38,9 @@ const SidebarLayout: React.FC<React.PropsWithChildren<unknown>> = ({ children })
     setOpenSignOutModal((state) => !state);
   };
 
-  const toggleSubmenu = (menu: string) => {
-    setIsSubmenuOpen((prev) => ({ ...prev, [menu]: !prev[menu] }));
-  };
+  // const toggleSubmenu = (menu: string) => {
+  //   setIsSubmenuOpen((prev) => ({ ...prev, [menu]: !prev[menu] }));
+  // };
 
   const links = [
     { to: '/inicio', icon: FaHome, label: 'Início', startsWith: '/inicio' },
@@ -89,7 +79,7 @@ const SidebarLayout: React.FC<React.PropsWithChildren<unknown>> = ({ children })
                 className={`relative py-2.5 px-4 mb-1 transition duration-200 hover:bg-custom-primary flex items-center ${
                   isSidebarOpen ? '' : 'justify-center text-center'
                 } ${location.pathname.startsWith(link.startsWith) ? 'bg-custom-primary' : ''}`}
-                onClick={() => link.submenu && toggleSubmenu(link.label)}
+                // onClick={() => link.submenu && toggleSubmenu(link.label)}
               >
                 <link.icon className={`mr-2 ${isSidebarOpen ? '' : 'm-0'}`} />
                 {isSidebarOpen && link.label}
@@ -97,23 +87,23 @@ const SidebarLayout: React.FC<React.PropsWithChildren<unknown>> = ({ children })
                   <span className='absolute top-0 right-0 w-1 h-full bg-yellow-500'></span>
                 )}
               </Link>
-              {link.submenu && isSubmenuOpen[link.label] && (
-                <ul className='pl-8 bg-custom-start transition-height '>
-                  {link.submenu.map((sublink) => (
-                    <li key={sublink.to}>
-                      <Link
-                        to={sublink.to}
-                        className={`relative py-2.5 px-4 mb-1 transition duration-200 hover:bg-custom-primary flex items-center ${
-                          isSidebarOpen ? '' : 'justify-center text-center'
-                        } ${location.pathname.startsWith(sublink.to) ? 'bg-custom-primary' : ''}`}
-                      >
-                        <sublink.icon className='mr-2' />
-                        {isSidebarOpen && sublink.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
+              {/*{link.submenu && isSubmenuOpen[link.label] && (*/}
+              {/*  <ul className='pl-8 bg-custom-start transition-height '>*/}
+              {/*    {link.submenu.map((sublink) => (*/}
+              {/*      <li key={sublink.to}>*/}
+              {/*        <Link*/}
+              {/*          to={sublink.to}*/}
+              {/*          className={`relative py-2.5 px-4 mb-1 transition duration-200 hover:bg-custom-primary flex items-center ${*/}
+              {/*            isSidebarOpen ? '' : 'justify-center text-center'*/}
+              {/*          } ${location.pathname.startsWith(sublink.to) ? 'bg-custom-primary' : ''}`}*/}
+              {/*        >*/}
+              {/*          <sublink.icon className='mr-2' />*/}
+              {/*          {isSidebarOpen && sublink.label}*/}
+              {/*        </Link>*/}
+              {/*      </li>*/}
+              {/*    ))}*/}
+              {/*  </ul>*/}
+              {/*)}*/}
             </div>
           ))}
         </nav>
