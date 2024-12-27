@@ -1,5 +1,6 @@
 import { Switch } from 'react-router-dom';
 import {
+  ActivateAccount,
   AllCards,
   CardOfDay,
   DesafioDoDia,
@@ -7,6 +8,8 @@ import {
   FiveCards,
   Home,
   MinhasAnotacoes,
+  NewCard,
+  NotFound,
   NovaAnotacao,
   SignUp,
   Tarot,
@@ -18,6 +21,7 @@ function Routes() {
   return (
     <Switch>
       <Route exact path='/' component={SignUp} />
+      <Route exact path='/ativar-conta' component={ActivateAccount} />
       <Route exact isPrivate path='/inicio' component={Home} />
       <Route exact isPrivate path='/tarot' component={Tarot} />
       <Route exact isPrivate path='/tarot/carta-do-dia' component={CardOfDay} />
@@ -28,6 +32,9 @@ function Routes() {
       <Route exact isPrivate path='/minhas-anotacoes/nova' component={NovaAnotacao} />
       <Route exact isPrivate path='/minhas-anotacoes/editar/:id' component={EditarAnotacao} />
       <Route exact isPrivate path='/desafio-do-dia' component={DesafioDoDia} />
+      <Route exact isPrivate path='/cartas' component={AllCards} />
+      <Route exact isPrivate path='/cartas/nova' component={NewCard} />
+      <Route path='*' component={NotFound} />
     </Switch>
   );
 }

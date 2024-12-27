@@ -1,17 +1,47 @@
 import './style.css';
-import { getFiveCards } from '@/utils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import Card from '@/components/Card';
 import HowToPlay from '@/components/HowToPlay';
+import api from '@/services';
+
+interface CardData {
+  card: string;
+  title: string;
+  subtitle: string;
+  affirmation: string;
+  img: string;
+  suggested_music: string;
+  blend: string;
+  power: string;
+}
 
 export default function FiveCards() {
-  const [cards, setCards] = useState(getFiveCards());
+  const [cards, setCards] = useState<CardData[]>([]);
   const history = useHistory();
 
   const handleNewDraw = () => {
-    setCards(getFiveCards());
+    fetchRandomCards();
   };
+
+  const fetchRandomCards = async () => {
+    try {
+      const response = await api.get('/cards', {
+        params: {
+          limit: 5,
+          random: true,
+        },
+      });
+      setCards(response.data);
+    } catch (error) {
+      console.error('Error fetching random cards:', error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    fetchRandomCards();
+  }, []);
 
   return (
     <>
@@ -26,31 +56,33 @@ export default function FiveCards() {
         </p>
 
         <div className='grid grid-cols-1 sm:grid-cols-3 sm:grid-rows-3 gap-4 justify-items-center items-start'>
-          {cards.map((card, index) => (
-            <div
-              key={index}
-              className={`mb-4 sm:mb-0 ${
-                index === 0
-                  ? 'col-start-1 sm:col-start-2 row-start-1'
-                  : index === 1
-                  ? 'col-start-1 row-start-2'
-                  : index === 2
-                  ? 'col-start-1 row-start-3 sm:col-start-2 sm:row-start-2'
-                  : index === 3
-                  ? 'col-start-1 row-start-4 sm:col-start-3 sm:row-start-2'
-                  : 'col-start-1 row-start-5 sm:col-start-2 sm:row-start-3'
-              }`}
-            >
-              <Card
-                img={card.img}
-                title={card.title}
-                affirmation={card.affirmation}
-                suggested_music={card.suggested_music}
-                blend={card.blend}
-                power={card.power}
-              />
-            </div>
-          ))}
+          {cards.map((card, index) => {
+            return (
+              <div
+                key={index}
+                className={`mb-4 sm:mb-0 ${
+                  index === 0
+                    ? 'col-start-1 sm:col-start-2 row-start-1'
+                    : index === 1
+                    ? 'col-start-1 row-start-2'
+                    : index === 2
+                    ? 'col-start-1 row-start-3 sm:col-start-2 sm:row-start-2'
+                    : index === 3
+                    ? 'col-start-1 row-start-4 sm:col-start-3 sm:row-start-2'
+                    : 'col-start-1 row-start-5 sm:col-start-2 sm:row-start-3'
+                }`}
+              >
+                <Card
+                  img={card.img}
+                  title={card.title}
+                  affirmation={card.affirmation}
+                  suggested_music={card.suggested_music}
+                  blend={card.blend}
+                  power={card.power}
+                />
+              </div>
+            );
+          })}
         </div>
 
         <div className='flex flex-row justify-center'>

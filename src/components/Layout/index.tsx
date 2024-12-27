@@ -7,6 +7,8 @@ import {
   FaStar,
   FaInstagram,
   FaLinkedin,
+  FaPlus,
+  FaList,
 } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 import { ExclamationTriangleIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
@@ -20,6 +22,7 @@ import { getGreeting } from '@/utils';
 const SidebarLayout: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [openSignOutModal, setOpenSignOutModal] = useState(false);
+  const [isSubmenuOpen, setIsSubmenuOpen] = useState<{ [key: string]: boolean }>({});
   const { signOut } = useAuth();
   const location = useLocation();
 
@@ -45,6 +48,10 @@ const SidebarLayout: React.FC<React.PropsWithChildren<unknown>> = ({ children })
     setOpenSignOutModal((state) => !state);
   };
 
+  const toggleSubmenu = (menu: string) => {
+    setIsSubmenuOpen((prev) => ({ ...prev, [menu]: !prev[menu] }));
+  };
+
   const links = [
     { to: '/inicio', icon: FaHome, label: 'Início', startsWith: '/inicio' },
     { to: '/tarot', icon: FaStar, label: 'Tarot', startsWith: '/tarot' },
@@ -59,6 +66,10 @@ const SidebarLayout: React.FC<React.PropsWithChildren<unknown>> = ({ children })
       icon: FaEdit,
       label: 'Minhas Anotações',
       startsWith: '/minhas-anotacoes',
+      // submenu: [
+      //   { to: '/minhas-anotacoes/nova', label: 'Nova Anotação', icon: FaPlus },
+      //   { to: '/minhas-anotacoes/lista', label: 'Lista de Anotações', icon: FaList },
+      // ],
     },
   ];
 
@@ -72,19 +83,38 @@ const SidebarLayout: React.FC<React.PropsWithChildren<unknown>> = ({ children })
       >
         <nav className='pt-20'>
           {links.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              className={`relative py-2.5 px-4 mb-1 transition duration-200 hover:bg-custom-primary flex items-center ${
-                isSidebarOpen ? '' : 'justify-center text-center'
-              } ${location.pathname.startsWith(link.startsWith) ? 'bg-custom-primary' : ''}`}
-            >
-              <link.icon className={`mr-2 ${isSidebarOpen ? '' : 'm-0'}`} />
-              {isSidebarOpen && link.label}
-              {location.pathname.startsWith(link.startsWith) && (
-                <span className='absolute top-0 right-0 w-1 h-full bg-yellow-500'></span>
+            <div key={link.to}>
+              <Link
+                to={link.to}
+                className={`relative py-2.5 px-4 mb-1 transition duration-200 hover:bg-custom-primary flex items-center ${
+                  isSidebarOpen ? '' : 'justify-center text-center'
+                } ${location.pathname.startsWith(link.startsWith) ? 'bg-custom-primary' : ''}`}
+                onClick={() => link.submenu && toggleSubmenu(link.label)}
+              >
+                <link.icon className={`mr-2 ${isSidebarOpen ? '' : 'm-0'}`} />
+                {isSidebarOpen && link.label}
+                {location.pathname.startsWith(link.startsWith) && (
+                  <span className='absolute top-0 right-0 w-1 h-full bg-yellow-500'></span>
+                )}
+              </Link>
+              {link.submenu && isSubmenuOpen[link.label] && (
+                <ul className='pl-8 bg-custom-start transition-height '>
+                  {link.submenu.map((sublink) => (
+                    <li key={sublink.to}>
+                      <Link
+                        to={sublink.to}
+                        className={`relative py-2.5 px-4 mb-1 transition duration-200 hover:bg-custom-primary flex items-center ${
+                          isSidebarOpen ? '' : 'justify-center text-center'
+                        } ${location.pathname.startsWith(sublink.to) ? 'bg-custom-primary' : ''}`}
+                      >
+                        <sublink.icon className='mr-2' />
+                        {isSidebarOpen && sublink.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               )}
-            </Link>
+            </div>
           ))}
         </nav>
         <footer className='p-4'>
@@ -92,31 +122,31 @@ const SidebarLayout: React.FC<React.PropsWithChildren<unknown>> = ({ children })
             onClick={handleSignOut}
             className='text-white py-2 px-4 hover:bg-custom-primary flex items-center w-full'
           >
-            <FaSignOutAlt className='mr-2 size-6' />
+            <FaSignOutAlt className='mr-2' size={24} />
             {isSidebarOpen && 'Sair da plataforma'}
           </button>
-          {isSidebarOpen && (
-            <div className='mt-4 text-center'>
-              <p className='text-sm'>Desenvolvido por:</p>
-              <p className='text-lg font-bold'>Paulo Victor Mesquita</p>
-              <div className='flex justify-center mt-2 space-x-4'>
-                <a
-                  href='https://www.linkedin.com/in/mesquitadev'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                >
-                  <FaLinkedin className='text-white hover:text-blue-500' size={24} />
-                </a>
-                <a
-                  href='https://www.instagram.com/_mesquitadev'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                >
-                  <FaInstagram className='text-white hover:text-pink-500' size={24} />
-                </a>
-              </div>
-            </div>
-          )}
+          {/*{isSidebarOpen && (*/}
+          {/*  <div className='mt-4 text-center'>*/}
+          {/*    <p className='text-sm'>Desenvolvido por:</p>*/}
+          {/*    <p className='text-lg font-bold'>Paulo Victor Mesquita</p>*/}
+          {/*    <div className='flex justify-center mt-2 space-x-4'>*/}
+          {/*      <a*/}
+          {/*        href='https://www.linkedin.com/in/mesquitadev'*/}
+          {/*        target='_blank'*/}
+          {/*        rel='noopener noreferrer'*/}
+          {/*      >*/}
+          {/*        <FaLinkedin className='text-white hover:text-blue-500' size={24} />*/}
+          {/*      </a>*/}
+          {/*      <a*/}
+          {/*        href='https://www.instagram.com/_mesquitadev'*/}
+          {/*        target='_blank'*/}
+          {/*        rel='noopener noreferrer'*/}
+          {/*      >*/}
+          {/*        <FaInstagram className='text-white hover:text-pink-500' size={24} />*/}
+          {/*      </a>*/}
+          {/*    </div>*/}
+          {/*  </div>*/}
+          {/*)}*/}
         </footer>
       </div>
 
@@ -141,10 +171,10 @@ const SidebarLayout: React.FC<React.PropsWithChildren<unknown>> = ({ children })
             <span className='text-sm'>
               {getGreeting()}, {user ? user.fullName : 'Usuário'}
             </span>
-            <img src={logo} alt='User' className='w-8 h-8 rounded-full' />
+            {/*<img src={logo} alt='User' className='w-8 h-8 rounded-full' />*/}
           </div>
         </div>
-        <div className='pt-24 p-5 text-2xl font-bold'>{children}</div>
+        <div className='mt-24 p-5 text-2xl font-bold'>{children}</div>
       </div>
 
       <Dialog open={openSignOutModal} onClose={handleSignOut} className='relative z-10'>
@@ -184,7 +214,6 @@ const SidebarLayout: React.FC<React.PropsWithChildren<unknown>> = ({ children })
                 </button>
                 <button
                   type='button'
-                  data-autofocus
                   onClick={handleSignOut}
                   className='mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto'
                 >

@@ -10,6 +10,7 @@ export default {
         'custom-end': '#3E041F',
         'custom-primary': '#B44D6F',
         'custom-gray': '#717171',
+        'gray-light': '#994461',
         'custom-gray-text': '#737373',
         'custom-gray-light': '#F1F1F1',
       },

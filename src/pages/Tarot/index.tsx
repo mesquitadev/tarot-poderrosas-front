@@ -27,7 +27,7 @@ export const Card = ({
   );
 };
 
-export default function SignUp() {
+export default function Tarot() {
   const history = useHistory();
   const [isModalOpen, setIsModalOpen] = useState(true);
 
@@ -35,7 +35,7 @@ export default function SignUp() {
 
   return (
     <>
-      <div className='flex flex-col w-full h-full text-center'>
+      <div className='flex flex-col w-full h-full min-h-screen text-center '>
         <p className='text-md'>Desperte sua Intuição</p>
         <p className='text-sm'>Escolha suas cartas e conecte-se com sua sabedoria interior</p>
         <div className='flex flex-col justify-items-center justify-center w-full h-full'>
@@ -56,6 +56,14 @@ export default function SignUp() {
               subtitle='Objetivo: Receber uma visão aprofundada sobre um desafio ou decisão importante.'
             />
           </div>
+        </div>
+        <div className='flex flex-row justify-center'>
+          <button
+            onClick={() => closeModal()}
+            className='mt-4 text-sm text-white bg-custom-start p-2 rounded'
+          >
+            Como Jogar
+          </button>
         </div>
       </div>
       <VideoModal

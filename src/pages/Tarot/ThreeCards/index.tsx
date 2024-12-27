@@ -1,15 +1,46 @@
 import './style.css';
-import { useState } from 'react';
-import { getThreeCards } from '@/utils';
+import { useEffect, useState } from 'react';
 import Card from '@/components/Card';
 import HowToPlay from '@/components/HowToPlay';
+import api from '@/services';
+import { useHistory } from 'react-router';
+
+interface CardData {
+  card: string;
+  title: string;
+  subtitle: string;
+  affirmation: string;
+  img: string;
+  suggested_music: string;
+  blend: string;
+  power: string;
+}
 
 export default function ThreeCards() {
-  const [cards, setCards] = useState(getThreeCards());
-
+  const [cards, setCards] = useState<CardData[]>([]);
+  const history = useHistory();
   const handleNewDraw = () => {
-    setCards(getThreeCards());
+    fetchRandomCards();
   };
+
+  const fetchRandomCards = async () => {
+    try {
+      const response = await api.get('/cards', {
+        params: {
+          limit: 5,
+          random: true,
+        },
+      });
+      setCards(response.data);
+    } catch (error) {
+      console.error('Error fetching random cards:', error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    fetchRandomCards();
+  }, []);
 
   return (
     <div className='flex flex-col w-full h-full text-center'>
@@ -44,13 +75,21 @@ export default function ThreeCards() {
             ))}
           </div>
         </div>
-        <button
-          onClick={handleNewDraw}
-          className='mt-4 text-sm text-white bg-custom-start p-2 rounded'
-        >
-          Nova Tiragem
-        </button>
+        <div className='flex flex-row justify-center'>
+          <button
+            onClick={handleNewDraw}
+            className='mt-4 text-sm text-white bg-custom-start p-2 rounded mr-5'
+          >
+            Nova Tiragem
+          </button>
 
+          <button
+            onClick={() => history.push('/minhas-anotacoes/nova')}
+            className='mt-4 text-sm text-white bg-custom-start p-2 rounded'
+          >
+            Criar Anotação
+          </button>
+        </div>
         <HowToPlay />
       </div>
     </div>

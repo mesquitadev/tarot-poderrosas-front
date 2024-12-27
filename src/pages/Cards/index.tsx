@@ -1,8 +1,33 @@
-import { getAllCards } from '@/utils';
 import Card from '@/components/Card';
+import api from '@/services';
+import { useEffect, useState } from 'react';
+
+interface CardData {
+  card: string;
+  title: string;
+  subtitle: string;
+  affirmation: string;
+  img: string;
+  suggested_music: string;
+  blend: string;
+  power: string;
+}
 
 const AllCards = () => {
-  const cards = getAllCards();
+  const [cards, setCards] = useState<CardData[]>([]);
+  const fetchRandomCards = async () => {
+    try {
+      const response = await api.get('/cards');
+      setCards(response.data);
+    } catch (error) {
+      console.error('Error fetching random cards:', error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    fetchRandomCards();
+  }, []);
 
   return (
     <div className='flex flex-col w-full h-full text-center'>

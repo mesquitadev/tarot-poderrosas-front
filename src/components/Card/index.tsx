@@ -1,6 +1,7 @@
 const Card = ({
   img,
   title,
+  subtitle,
   affirmation,
   suggested_music,
   blend,
@@ -8,15 +9,18 @@ const Card = ({
 }: {
   img: string;
   title: string;
+  subtitle?: string;
   affirmation: string;
   suggested_music: string;
   blend: string;
   power: string;
+  incense?: string;
 }) => {
   return (
     <div className='justify-items-center m-2 text-center'>
       <img src={img} className='w-full' alt='' />
       <p className='text-lg font-bold mt-2'>{title}</p>
+      <p className='text-sm font-bold mt-2'>{subtitle}</p>
       <p className='text-sm text-custom-gray-text mt-1'>
         Essa afirmação positiva é projetada para reforçar as qualidades e o tema de cada carta.
         Ajudando você a se conectar com seu poder interior e a sua jornada do autoconhecimento.{' '}
