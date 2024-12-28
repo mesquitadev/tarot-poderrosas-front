@@ -27,7 +27,7 @@ export default function ThreeCards() {
     try {
       const response = await api.get('/cards', {
         params: {
-          limit: 5,
+          limit: 3,
           random: true,
         },
       });
