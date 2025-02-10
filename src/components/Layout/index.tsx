@@ -9,7 +9,7 @@ import logo from '../../assets/PoderRosa_logo_Branca.svg';
 import { useAuth } from '@/hooks/useAuth';
 import { getGreeting } from '@/utils';
 
-const SidebarLayout: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
+const SidebarLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [openSignOutModal, setOpenSignOutModal] = useState(false);
   // const [isSubmenuOpen, setIsSubmenuOpen] = useState<{ [key: string]: boolean }>({});
@@ -76,7 +76,7 @@ const SidebarLayout: React.FC<React.PropsWithChildren<unknown>> = ({ children })
             <div key={link.to}>
               <Link
                 to={link.to}
-                className={`relative py-2.5 px-4 mb-1 transition duration-200 hover:bg-custom-primary flex items-center ${
+                className={`font-merryweather font-light hover:font-bold relative py-2.5 px-4 mb-1 transition duration-200 hover:bg-custom-primary flex items-center ${
                   isSidebarOpen ? '' : 'justify-center text-center'
                 } ${location.pathname.startsWith(link.startsWith) ? 'bg-custom-primary' : ''}`}
                 // onClick={() => link.submenu && toggleSubmenu(link.label)}

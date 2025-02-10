@@ -4,6 +4,7 @@ import Card from '@/components/Card';
 import HowToPlay from '@/components/HowToPlay';
 import api from '@/services';
 import { useHistory } from 'react-router';
+import cardBack from '@/assets/back-card.svg';
 
 interface CardData {
   card: string;
@@ -11,7 +12,7 @@ interface CardData {
   subtitle: string;
   affirmation: string;
   img: string;
-  suggested_music: string;
+  suggestedMusic: string;
   blend: string;
   power: string;
   incense: string;
@@ -54,12 +55,13 @@ export default function CardOfDay() {
       <div className='flex flex-col justify-center items-center w-full h-full'>
         <div className=' justify-center justify-items-center gap-x-4 w-full'>
           <Card
-            img={card[0]?.img}
             affirmation={card[0]?.affirmation}
-            suggested_music={card[0]?.suggested_music}
+            suggested_music={card[0]?.suggestedMusic}
             title={card[0]?.title}
             blend={card[0]?.blend}
             power={card[0]?.power}
+            backImg={card[0]?.img}
+            frontImg={cardBack}
           />
         </div>
         <div className='flex flex-row justify-center'>

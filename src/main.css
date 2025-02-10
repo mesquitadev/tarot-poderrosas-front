@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family: Playfair Display, serif;
-}
-
 .custom-gradient-sidebar {
   background: linear-gradient(to right, #A40B52, #3E041F);
   background-size: 600% 100%;

@@ -35,10 +35,12 @@ export default function Tarot() {
 
   return (
     <>
-      <div className='flex flex-col w-full h-full min-h-screen text-center '>
-        <p className='text-md'>Desperte sua Intuição</p>
-        <p className='text-sm'>Escolha suas cartas e conecte-se com sua sabedoria interior</p>
-        <div className='flex flex-col justify-items-center justify-center w-full h-full'>
+      <div className='flex w-full h-screen flex-col text-center'>
+        <p className='font-merryweather text-md'>Desperte sua Intuição</p>
+        <p className='font-raleway text-sm'>
+          Escolha suas cartas e conecte-se com sua sabedoria interior
+        </p>
+        <div className='flex flex-col h-full items-center justify-center'>
           <div className='grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3  justify-around justify-items-center gap-x-4 w-full'>
             <Card
               onClick={() => history.push('/tarot/carta-do-dia')}
@@ -69,7 +71,7 @@ export default function Tarot() {
       <VideoModal
         isOpen={isModalOpen}
         onClose={closeModal}
-        videoUrl='https://www.youtube.com/embed/NBSE2mUnMFg?si=330lPgdagXS6mMfo'
+        videoUrl='https://player-vz-88b4be7d-dd2.tv.pandavideo.com.br/embed/?v=5a76d6d0-eaa9-4cbc-a0c1-34dbb150937f'
       />
     </>
   );

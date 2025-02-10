@@ -4,14 +4,16 @@ import { useHistory } from 'react-router';
 import Card from '@/components/Card';
 import HowToPlay from '@/components/HowToPlay';
 import api from '@/services';
+import cardBack from '@/assets/back-card.svg';
 
 interface CardData {
+  id: number;
   card: string;
   title: string;
   subtitle: string;
   affirmation: string;
   img: string;
-  suggested_music: string;
+  suggestedMusic: string;
   blend: string;
   power: string;
 }
@@ -73,12 +75,14 @@ export default function FiveCards() {
                 }`}
               >
                 <Card
-                  img={card.img}
-                  title={card.title}
-                  affirmation={card.affirmation}
-                  suggested_music={card.suggested_music}
-                  blend={card.blend}
-                  power={card.power}
+                  key={card?.id}
+                  affirmation={card?.affirmation}
+                  suggested_music={card?.suggestedMusic}
+                  title={card?.title}
+                  blend={card?.blend}
+                  power={card?.power}
+                  backImg={card?.img}
+                  frontImg={cardBack}
                 />
               </div>
             );

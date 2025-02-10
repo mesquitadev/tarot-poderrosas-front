@@ -1,5 +1,9 @@
+import { useState } from 'react';
+import './styles.css';
+
 const Card = ({
-  img,
+  frontImg,
+  backImg,
   title,
   subtitle,
   affirmation,
@@ -7,7 +11,8 @@ const Card = ({
   blend,
   power,
 }: {
-  img: string;
+  frontImg: string;
+  backImg: string;
   title: string;
   subtitle?: string;
   affirmation: string;
@@ -16,9 +21,46 @@ const Card = ({
   power: string;
   incense?: string;
 }) => {
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  const handleFlip = () => {
+    setIsFlipped(!isFlipped);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      handleFlip();
+    }
+  };
+
   return (
-    <div className='justify-items-center m-2 text-center'>
-      <img src={img} className='w-full' alt='' />
+    <div className='justify-items-center m-2 text-center max-w-[400px]'>
+      <div
+        className={`flip-card ${isFlipped ? 'flipped' : ''}`}
+        onClick={handleFlip}
+        onKeyDown={handleKeyDown}
+        role='button'
+        tabIndex={0}
+      >
+        <div className='flip-card-inner'>
+          <div className='flip-card-front'>
+            <img
+              src={frontImg}
+              style={{ borderColor: 'rgba(245, 158, 11, 1)' }}
+              className='border-[5px] min-w-[400px] rounded-[15px] shadow-sm'
+              alt='Front'
+            />
+          </div>
+          <div className='flip-card-back'>
+            <img
+              src={backImg}
+              style={{ borderColor: 'rgba(245, 158, 11, 1)' }}
+              className=' border-[5px] rounded-[15px] shadow-sm min-w-[400px]'
+              alt='Back'
+            />
+          </div>
+        </div>
+      </div>
       <p className='text-lg font-bold mt-2'>{title}</p>
       <p className='text-sm font-bold mt-2'>{subtitle}</p>
       <p className='text-sm text-custom-gray-text mt-1'>
@@ -61,4 +103,5 @@ const Card = ({
     </div>
   );
 };
+
 export default Card;

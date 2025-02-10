@@ -16,9 +16,11 @@ import {
   ThreeCards,
 } from '@/pages';
 import Route from './Route';
+import React from 'react';
 
 function Routes() {
   return (
+    // @ts-ignore
     <Switch>
       <Route exact path='/' component={SignUp} />
       <Route exact path='/ativar-conta' component={ActivateAccount} />

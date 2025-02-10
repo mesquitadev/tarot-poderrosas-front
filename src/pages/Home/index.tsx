@@ -9,6 +9,7 @@ import { useHistory } from 'react-router';
 import { useCallback, useEffect, useState } from 'react';
 import api from '@/services';
 import { getPhraseOfDay } from '@/utils';
+import EmptyComponent from '@/components/EmptyState';
 
 const WeekDays = () => {
   const daysOfWeek = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
@@ -59,14 +60,14 @@ const WeekDays = () => {
                 : 'bg-blue-custom text-custom-start'
             }`}
           >
-            <p className='text-sm'>{day}</p>
-            <p className='text-sm'>{format(date, 'd', { locale: ptBR })}</p>
+            <p className='font-raleway text-sm'>{day}</p>
+            <p className='font-raleway text-sm'>{format(date, 'd', { locale: ptBR })}</p>
           </button>
         );
       })}
       {mission && (
         <div className='mt-2 h-[150px] w-full justify-center items-center bg-white rounded drop-shadow'>
-          <div className='flex flex-col p-4 w-full h-full  relative justify-center'>
+          <div className='flex flex-col p-4 w-full h-full relative justify-center'>
             <div className='absolute left-0 h-20 w-2 bg-custom-start'></div>
             <p className='text-lg text-custom-start'>{mission.title}</p>
             <p className='text-sm text-custom-start'>{mission.task}</p>
@@ -101,7 +102,7 @@ export default function Home() {
         </div>
 
         <div className='col-span-7 sm:col-span-2 lg:grid-cols-2  flex flex-col align-middle'>
-          <p className='text-custom-primary'>Desperte sua Intuição</p>
+          <p className='font-merryweather text-custom-primary'>Desperte sua Intuição</p>
           <div className='space-y-2 pt-0 mt-2'>
             <button
               onClick={() => history.push('/tarot/carta-do-dia')}
@@ -147,7 +148,7 @@ export default function Home() {
         <div className=' gap-2 justify-start'>
           <div className=''>
             <div className='mb-2'>
-              <p className='font-playfair text-custom-primary'>Desafio Diário</p>
+              <p className='font-merryweather text-custom-primary'>Desafio Diário</p>
             </div>
             <div>
               <WeekDays />
@@ -156,29 +157,33 @@ export default function Home() {
         </div>
         <div>
           <div className='mb-5'>
-            <p className='text-custom-primary'>Minhas Anotações</p>
+            <p className='font-merryweather text-custom-primary'>Minhas Anotações</p>
           </div>
-          <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-4'>
-            {annotations?.slice(0, 3).map((annotation: any, index: number) => (
-              <div
-                key={annotation.id}
-                className={`${
-                  bgColors[index % bgColors.length]
-                } p-3 rounded-lg shadow-md min-h-[210px] flex flex-col justify-between drop-shadow`}
-              >
-                <p className='text-md text-gray-50'>{annotation.title}</p>
-                <div>
-                  <p className='text-sm text-gray-50'>
-                    {format(new Date(annotation.createdAt), 'dd/MM/yyyy HH:mm')}
-                  </p>
-                  <div
-                    className='text-sm text-gray-50 text-wrap break-words line-clamp-4'
-                    dangerouslySetInnerHTML={{ __html: annotation.content }}
-                  />
+          {annotations.length > 0 ? (
+            <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-4'>
+              {annotations.slice(0, 3).map((annotation: any, index: number) => (
+                <div
+                  key={annotation.id}
+                  className={`${
+                    bgColors[index % bgColors.length]
+                  } p-3 rounded-lg shadow-md min-h-[210px] flex flex-col justify-between drop-shadow`}
+                >
+                  <p className='text-md text-gray-50'>{annotation.title}</p>
+                  <div>
+                    <p className='text-sm text-gray-50'>
+                      {format(new Date(annotation.createdAt), 'dd/MM/yyyy HH:mm')}
+                    </p>
+                    <div
+                      className='text-sm text-gray-50 text-wrap break-words line-clamp-4'
+                      dangerouslySetInnerHTML={{ __html: annotation.content }}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <EmptyComponent to='/minhas-anotacoes/nova' />
+          )}
         </div>
       </div>
       {phraseOfDay && (
