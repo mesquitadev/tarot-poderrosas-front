@@ -1,6 +1,6 @@
 import './style.css';
 import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import Card from '@/components/Card';
 import HowToPlay from '@/components/HowToPlay';
 import api from '@/services';
@@ -20,7 +20,7 @@ interface CardData {
 
 export default function FiveCards() {
   const [cards, setCards] = useState<CardData[]>([]);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleNewDraw = () => {
     fetchRandomCards();
@@ -98,7 +98,7 @@ export default function FiveCards() {
           </button>
 
           <button
-            onClick={() => history.push('/minhas-anotacoes/nova')}
+            onClick={() => navigate('/minhas-anotacoes/nova')}
             className='mt-4 text-sm text-white bg-custom-start p-2 rounded'
           >
             Criar Anotação

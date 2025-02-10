@@ -1,20 +1,23 @@
 import Card from '@/components/Card';
 import api from '@/services';
 import { useEffect, useState } from 'react';
+import cardBack from '@/assets/back-card.svg';
 
 interface CardData {
+  id: number;
   card: string;
   title: string;
   subtitle: string;
   affirmation: string;
   img: string;
-  suggested_music: string;
+  suggestedMusic: string;
   blend: string;
   power: string;
 }
 
 const AllCards = () => {
   const [cards, setCards] = useState<CardData[]>([]);
+
   const fetchRandomCards = async () => {
     try {
       const response = await api.get('/cards');
@@ -39,13 +42,14 @@ const AllCards = () => {
           <div key={index} className='mb-4 sm:mb-0'>
             <p className='text-sm text-custom-gray-text'>Carta {index + 1}</p>
             <Card
-              img={card.img}
-              title={card.title}
-              affirmation={card.affirmation}
-              suggested_music={card.suggested_music}
-              blend={card.blend}
-              power={card.power}
-              subtitle={card.subtitle}
+              key={card?.id}
+              affirmation={card?.affirmation}
+              suggested_music={card?.suggestedMusic}
+              title={card?.title}
+              blend={card?.blend}
+              power={card?.power}
+              backImg={card?.img}
+              frontImg={cardBack}
             />
           </div>
         ))}

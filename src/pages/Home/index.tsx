@@ -5,7 +5,7 @@ import banner from '../../assets/Topo_PoderRosa_Aprovar.svg';
 import uma_carta from '../../assets/uma-carta.svg';
 import tres_cartas from '../../assets/tres-cartas.svg';
 import cinco_cartas from '../../assets/estrela-cinco-cartas.svg';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useCallback, useEffect, useState } from 'react';
 import api from '@/services';
 import { getPhraseOfDay } from '@/utils';
@@ -79,7 +79,7 @@ const WeekDays = () => {
 };
 
 export default function Home() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [annotations, setAnnotations] = useState<any[]>([]);
   const [phraseOfDay] = useState<any>(getPhraseOfDay());
 
@@ -105,7 +105,7 @@ export default function Home() {
           <p className='font-merryweather text-custom-primary'>Desperte sua Intuição</p>
           <div className='space-y-2 pt-0 mt-2'>
             <button
-              onClick={() => history.push('/tarot/carta-do-dia')}
+              onClick={() => navigate('/tarot/carta-do-dia')}
               className='text-start items-center rounded-lg w-full bg-custom-primary flex flex-row px-5 py-2 text-white justify-center'
             >
               <img src={uma_carta} alt='Icone de uma Carta' />
@@ -118,7 +118,7 @@ export default function Home() {
             </button>
 
             <button
-              onClick={() => history.push('/tarot/tres-cartas')}
+              onClick={() => navigate('/tarot/tres-cartas')}
               className='w-full rounded-lg bg-custom-primary flex flex-row px-5 py-2 text-white justify-center text-start items-center align-middle min-w-[200px]'
             >
               <img src={tres_cartas} className='w-[50px]' alt='Icone das Três cartas' />
@@ -131,7 +131,7 @@ export default function Home() {
             </button>
 
             <button
-              onClick={() => history.push('/tarot/cinco-cartas')}
+              onClick={() => navigate('/tarot/cinco-cartas')}
               className='w-full  rounded-lg bg-custom-primary flex flex-row px-5 py-2 text-white justify-center text-start items-center min-w-[300px]'
             >
               <img src={cinco_cartas} className='w-[50px]' alt='Icone das Cinco cartas' />

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+
 import background from '../../assets/Login.svg';
 import logo from '../../assets/PoderRosa_logo_Branca.svg';
 import api from '@/services';
@@ -16,7 +17,7 @@ const CreatePassword: React.FC = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   const token = new URLSearchParams(location.search).get('token');
@@ -29,7 +30,7 @@ const CreatePassword: React.FC = () => {
 
     try {
       await api.post('/create-password', { token, password: data.password });
-      history.push('/login');
+      navigate('/login');
     } catch (err) {
       alert('Failed to create password');
     }

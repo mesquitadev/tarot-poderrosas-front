@@ -1,44 +1,24 @@
 import React from 'react';
-import {
-  Redirect,
-  Route as ReactDOMRoute,
-  RouteProps as ReactDOMRouteProps,
-} from 'react-router-dom';
-
+import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import SidebarLayout from '@/components/Layout';
+import Layout from '@/components/Layout';
 
-interface IRouteProps extends ReactDOMRouteProps {
-  isPrivate?: boolean;
-  component: React.ComponentType;
-}
-
-const Route: React.FC<IRouteProps> = ({ isPrivate = false, component: Component, ...rest }) => {
+const PrivateRoute: React.FC = () => {
   const { token } = useAuth();
-  return (
-    <ReactDOMRoute
-      {...rest}
-      render={({ location }) => {
-        if (token && isPrivate) {
-          return (
-            <SidebarLayout>
-              <Component />
-            </SidebarLayout>
-          );
-        }
 
-        return isPrivate === !!token ? (
-          <Component />
-        ) : (
-          <Redirect
-            to={{
-              pathname: isPrivate ? '/' : '/inicio',
-              state: { from: location },
-            }}
-          />
-        );
-      }}
-    />
+  return token ? (
+    <Layout>
+      <Outlet />
+    </Layout>
+  ) : (
+    <Navigate to='/' />
   );
 };
-export default Route;
+
+const PublicRoute: React.FC = () => {
+  const { token } = useAuth();
+
+  return token ? <Navigate to='/inicio' /> : <Outlet />;
+};
+
+export { PrivateRoute, PublicRoute };

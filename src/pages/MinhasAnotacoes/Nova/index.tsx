@@ -1,17 +1,16 @@
-import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import api from '@/services';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const CriarAnotacao = () => {
   const { control, handleSubmit, register } = useForm();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const onSubmit = async (data: any) => {
     await api.post('/diary', data);
-    history.push('/minhas-anotacoes');
+    navigate('/minhas-anotacoes');
   };
 
   return (

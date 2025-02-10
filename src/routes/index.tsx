@@ -1,4 +1,4 @@
-import { Switch } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import {
   ActivateAccount,
   AllCards,
@@ -15,30 +15,43 @@ import {
   Tarot,
   ThreeCards,
 } from '@/pages';
-import Route from './Route';
-import React from 'react';
+import { PublicRoute, PrivateRoute } from './Route';
 
-function Routes() {
+function AppRoutes() {
   return (
-    // @ts-ignore
-    <Switch>
-      <Route exact path='/' component={SignUp} />
-      <Route exact path='/ativar-conta' component={ActivateAccount} />
-      <Route exact isPrivate path='/inicio' component={Home} />
-      <Route exact isPrivate path='/tarot' component={Tarot} />
-      <Route exact isPrivate path='/tarot/carta-do-dia' component={CardOfDay} />
-      <Route exact isPrivate path='/tarot/tres-cartas' component={ThreeCards} />
-      <Route exact isPrivate path='/tarot/cinco-cartas' component={FiveCards} />
-      <Route exact isPrivate path='/tarot/baralho' component={AllCards} />
-      <Route exact isPrivate path='/minhas-anotacoes' component={MinhasAnotacoes} />
-      <Route exact isPrivate path='/minhas-anotacoes/nova' component={NovaAnotacao} />
-      <Route exact isPrivate path='/minhas-anotacoes/editar/:id' component={EditarAnotacao} />
-      <Route exact isPrivate path='/desafio-do-dia' component={DesafioDoDia} />
-      <Route exact isPrivate path='/cartas' component={AllCards} />
-      <Route exact isPrivate path='/cartas/nova' component={NewCard} />
-      <Route path='*' component={NotFound} />
-    </Switch>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<PublicRoute />}>
+          <Route path='/' element={<SignUp />} />
+          <Route path='/ativar-conta' element={<ActivateAccount />} />
+        </Route>
+
+        <Route path='/inicio' element={<PrivateRoute />}>
+          <Route index element={<Home />} />
+        </Route>
+        <Route path='/tarot' element={<PrivateRoute />}>
+          <Route index element={<Tarot />} />
+          <Route path='carta-do-dia' element={<CardOfDay />} />
+          <Route path='tres-cartas' element={<ThreeCards />} />
+          <Route path='cinco-cartas' element={<FiveCards />} />
+          <Route path='baralho' element={<AllCards />} />
+        </Route>
+        <Route path='/minhas-anotacoes' element={<PrivateRoute />}>
+          <Route index element={<MinhasAnotacoes />} />
+          <Route path='nova' element={<NovaAnotacao />} />
+          <Route path='editar/:id' element={<EditarAnotacao />} />
+        </Route>
+        <Route path='/desafio-do-dia' element={<PrivateRoute />}>
+          <Route index element={<DesafioDoDia />} />
+        </Route>
+        <Route path='/cartas' element={<PrivateRoute />}>
+          <Route index element={<AllCards />} />
+          <Route path='nova' element={<NewCard />} />
+        </Route>
+        <Route path='*' element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
-export default Routes;
+export default AppRoutes;

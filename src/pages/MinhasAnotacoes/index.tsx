@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle, Menu } from '@headlessui/react';
 import {
   EllipsisHorizontalIcon,
@@ -14,7 +14,7 @@ const MinhasAnotacoes = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [annotationToDelete, setAnnotationToDelete] = useState<any>(null);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleGetAnnotations = useCallback(async () => {
     const response = await api.get('/diary');
@@ -50,7 +50,7 @@ const MinhasAnotacoes = () => {
       <div className='flex justify-between items-center mb-4'>
         <h1 className='text-2xl font-bold'>Minhas Anotações</h1>
         <button
-          onClick={() => history.push('/minhas-anotacoes/nova')}
+          onClick={() => navigate('/minhas-anotacoes/nova')}
           className='bg-custom-start hover:bg-custom-primary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
         >
           Nova Anotação
@@ -84,7 +84,7 @@ const MinhasAnotacoes = () => {
                     <Menu.Item>
                       {({ active }) => (
                         <button
-                          onClick={() => history.push(`/minhas-anotacoes/editar/${annotation.id}`)}
+                          onClick={() => navigate(`/minhas-anotacoes/editar/${annotation.id}`)}
                           className={`flex px-4 py-2 text-sm items-center ${
                             active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
                           }`}

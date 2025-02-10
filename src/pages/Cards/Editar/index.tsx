@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import api from '@/services';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const EditarAnotacao = () => {
   const { id } = useParams<{ id: string }>();
   const { control, handleSubmit, register, setValue } = useForm();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const EditarAnotacao = () => {
 
   const onSubmit = async (data: any) => {
     await api.put(`/diary/${id}`, data);
-    history.push('/minhas-anotacoes');
+    navigate('/minhas-anotacoes');
   };
 
   if (loading) {

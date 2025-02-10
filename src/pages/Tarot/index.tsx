@@ -3,7 +3,7 @@ import back_tres_cartas from '../../assets/back_tres_cartas.svg';
 import back_cinco_cartas from '../../assets/back_cinco_cartas.svg';
 
 import './style.css';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import VideoModal from '@/components/VIdeoModal';
 import { useState } from 'react';
 
@@ -28,7 +28,7 @@ export const Card = ({
 };
 
 export default function Tarot() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(true);
 
   const closeModal = () => setIsModalOpen((state) => !state);
@@ -43,17 +43,17 @@ export default function Tarot() {
         <div className='flex flex-col h-full items-center justify-center'>
           <div className='grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3  justify-around justify-items-center gap-x-4 w-full'>
             <Card
-              onClick={() => history.push('/tarot/carta-do-dia')}
+              onClick={() => navigate('/tarot/carta-do-dia')}
               background={back_carta_do_dia}
               subtitle='Objetivo: Obter uma mensagem diária que inspire e te dê direção.'
             />
             <Card
-              onClick={() => history.push('/tarot/tres-cartas')}
+              onClick={() => navigate('/tarot/tres-cartas')}
               background={back_tres_cartas}
               subtitle='Objetivo: Compreender melhor uma situação específica em sua vida.'
             />
             <Card
-              onClick={() => history.push('/tarot/cinco-cartas')}
+              onClick={() => navigate('/tarot/cinco-cartas')}
               background={back_cinco_cartas}
               subtitle='Objetivo: Receber uma visão aprofundada sobre um desafio ou decisão importante.'
             />

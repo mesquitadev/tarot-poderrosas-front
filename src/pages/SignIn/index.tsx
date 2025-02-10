@@ -3,15 +3,18 @@ import background from '../../assets/Login.svg';
 import logo from '../../assets/PoderRosa_logo_Branca.svg';
 import { useAuth } from '@/hooks/useAuth';
 import { useLoading } from '@/hooks/useLoading';
+import { useNavigate } from 'react-router';
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
+  const navigate = useNavigate();
   const { signIn } = useAuth();
   const { loading } = useLoading();
 
   const onSubmit = async (data: any) => {
     try {
       await signIn(data);
+      navigate('/inicio');
     } catch (error) {
       console.error('Login error:', error);
     }

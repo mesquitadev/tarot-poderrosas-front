@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaInfoCircle, FaPlusCircle } from 'react-icons/fa';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface EmptyComponentProps {
   message?: string;
@@ -8,13 +8,13 @@ interface EmptyComponentProps {
 }
 
 const EmptyComponent: React.FC<EmptyComponentProps> = ({ message, to }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <div className='border-2 border-dashed border-gray-500 rounded-md flex flex-col items-center justify-center h-full'>
       {to ? (
         <button
-          onClick={() => history.push(to)}
+          onClick={() => navigate(to)}
           className=' flex justify-center items-center flex-col '
         >
           <FaPlusCircle className='text-gray-500 text-6xl mb-4' />

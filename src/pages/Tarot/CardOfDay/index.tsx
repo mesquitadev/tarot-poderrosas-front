@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Card from '@/components/Card';
 import HowToPlay from '@/components/HowToPlay';
 import api from '@/services';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router';
 import cardBack from '@/assets/back-card.svg';
 
 interface CardData {
@@ -19,7 +19,7 @@ interface CardData {
 }
 export default function CardOfDay() {
   const [card, setCard] = useState<CardData[]>([]);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleNewDraw = () => {
     fetchRandomCards();
@@ -73,7 +73,7 @@ export default function CardOfDay() {
           </button>
 
           <button
-            onClick={() => history.push('/minhas-anotacoes/nova')}
+            onClick={() => navigate('/minhas-anotacoes/nova')}
             className='mt-4 text-sm text-white bg-custom-start p-2 rounded'
           >
             Criar Anotação
