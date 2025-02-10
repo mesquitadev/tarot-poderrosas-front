@@ -1,4 +1,6 @@
-[[redirects]]
-from = "/*"
-to = "index.html"
-status = 200
+[redirects]
+  from = "/*"
+  to = "index.html"
+  status = 200
+[build]
+  node_version = "22.12.0"
