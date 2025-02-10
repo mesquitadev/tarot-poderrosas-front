@@ -80,7 +80,7 @@ const WeekDays = () => {
 
 export default function Home() {
   const history = useHistory();
-  const [annotations, setAnnotations] = useState<any>([]);
+  const [annotations, setAnnotations] = useState<any[]>([]);
   const [phraseOfDay] = useState<any>(getPhraseOfDay());
 
   const handleGetAnnotations = useCallback(async () => {
@@ -180,6 +180,7 @@ export default function Home() {
                   </div>
                 </div>
               ))}
+              {annotations.length < 3 && <EmptyComponent to='/minhas-anotacoes/nova' />}
             </div>
           ) : (
             <EmptyComponent to='/minhas-anotacoes/nova' />
