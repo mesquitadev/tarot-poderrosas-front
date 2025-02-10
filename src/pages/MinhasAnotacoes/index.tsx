@@ -68,7 +68,7 @@ const MinhasAnotacoes = () => {
               <Menu as='div' className='relative inline-block text-left w-full'>
                 <div className=' flex flex-row justify-between w-full'>
                   <p className='text-md text-gray-50'>{annotation.title}</p>
-                  <Menu.Button className='inline-flex justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm  hover:text-custom-start hover:bg-white hover:text-black'>
+                  <Menu.Button className='inline-flex justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm  hover:text-custom-start hover:bg-white'>
                     <EllipsisHorizontalIcon
                       aria-hidden='true'
                       className=' size-7 text-gray-400 justify-end'
