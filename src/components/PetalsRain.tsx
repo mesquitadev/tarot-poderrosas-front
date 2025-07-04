@@ -38,8 +38,10 @@ export default function PetalsRain() {
     function handleResize() {
       width = window.innerWidth;
       height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
+      if (canvas) {
+        canvas.width = width;
+        canvas.height = height;
+      }
     }
     window.addEventListener('resize', handleResize);
 
@@ -65,7 +67,8 @@ export default function PetalsRain() {
     };
 
     function animate() {
-      ctx.clearRect(0, 0, width, height);
+      if (!ctx) return;
+      ctx?.clearRect(0, 0, width, height);
       for (const petal of petals.current) {
         petal.y += petal.speed;
         petal.x += Math.sin(petal.swayPhase + petal.y / 50) * petal.sway;

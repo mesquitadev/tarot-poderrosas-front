@@ -145,9 +145,11 @@ const SidebarLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
             )}
           </div>
           {/* Saudação alinhada à direita */}
-          <span className='text-sm'>
-            {getGreeting()}, {user ? user.fullName : 'Usuário'}
-          </span>
+          <div className='flex items-center'>
+            <span className='text-sm'>
+              {getGreeting()}, {user ? user.fullName : 'Usuário'}
+            </span>
+          </div>
         </div>
         <div className='p-5 text-2xl font-bold'>{children}</div>
       </div>
