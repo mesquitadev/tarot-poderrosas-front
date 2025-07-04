@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import petalImg from '@/assets/petal.png'; // coloque sua imagem de pétala em assets/petal.png
 
-const PETALS_COUNT = 18;
+const PETALS_COUNT = 25;
 const PETAL_MIN_SIZE = 24;
 const PETAL_MAX_SIZE = 40;
 const PETAL_MIN_SPEED = 1.2;
 const PETAL_MAX_SPEED = 2.5;
 const PETAL_MIN_SWAY = 0.5;
 const PETAL_MAX_SWAY = 2.5;
-const DURATION = 4000; // ms
+const DURATION = 6000; // ms
 
 function random(min: number, max: number) {
   return Math.random() * (max - min) + min;
@@ -68,7 +68,7 @@ export default function PetalsRain() {
 
     function animate() {
       if (!ctx) return;
-      ctx?.clearRect(0, 0, width, height);
+      ctx.clearRect(0, 0, width, height);
       for (const petal of petals.current) {
         petal.y += petal.speed;
         petal.x += Math.sin(petal.swayPhase + petal.y / 50) * petal.sway;
@@ -109,3 +109,11 @@ export default function PetalsRain() {
     />
   );
 }
+
+// Exemplo de contexto para músicas do Spotify
+// Você pode adicionar um player do Spotify ou YouTube Music em um componente separado, por exemplo:
+// <iframe src="https://open.spotify.com/embed/playlist/ID_DA_PLAYLIST" width="300" height="380" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+// Ou para YouTube Music:
+// <iframe width="300" height="380" src="https://www.youtube.com/embed/ID_DO_VIDEO?autoplay=0" frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>
+
+// Para um contexto real, crie um componente MusicPlayer e use o iframe conforme necessário.
