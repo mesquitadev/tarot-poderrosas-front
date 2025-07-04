@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './styles.css';
 
 const Card = ({
@@ -22,51 +22,52 @@ const Card = ({
   incense?: string;
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
-
-  const handleFlip = () => {
-    setIsFlipped(!isFlipped);
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      handleFlip();
-    }
-  };
-
+  useEffect(() => {
+    console.log('');
+  }, []);
   return (
-    <div className='justify-items-center m-2 text-center max-w-[400px]'>
+    <div className='flex flex-col items-center justify-center m-2 text-center w-full max-w-[400px] sm:max-w-[300px] xs:max-w-full'>
       <div
-        className={`flip-card ${isFlipped ? 'flipped' : ''}`}
-        onClick={handleFlip}
-        onKeyDown={handleKeyDown}
-        role='button'
-        tabIndex={0}
+        className={`flip-card ${
+          isFlipped ? 'flipped' : ''
+        } w-full max-w-[400px] sm:max-w-[300px] xs:max-w-full`}
+        role='region'
+        aria-label='Carta do Tarot'
       >
-        <div className='flip-card-inner'>
-          <div className='flip-card-front'>
+        <div className='flip-card-inner h-full pointer-events-none'>
+          <div className='flip-card-front h-full'>
             <img
               src={frontImg}
-              style={{ borderColor: 'rgba(245, 158, 11, 1)' }}
-              className='border-[5px] min-w-[400px] rounded-[15px] shadow-sm'
+              style={{ border: '5px solid rgba(245, 158, 11, 1)', height: '100%', width: '100%' }}
+              className='object-cover rounded-[15px] shadow-sm'
               alt='Front'
             />
           </div>
-          <div className='flip-card-back'>
+          <div className='flip-card-back h-full'>
             <img
               src={backImg}
-              style={{ borderColor: 'rgba(245, 158, 11, 1)' }}
-              className=' border-[5px] rounded-[15px] shadow-sm min-w-[400px]'
+              style={{ border: '5px solid rgba(245, 158, 11, 1)', height: '100%', width: '100%' }}
+              className='object-cover rounded-[15px] shadow-sm'
               alt='Back'
             />
           </div>
         </div>
       </div>
-      <p className='text-lg font-bold mt-2'>{title}</p>
-      <p className='text-sm font-bold mt-2'>{subtitle}</p>
-      <p className='text-sm text-custom-gray-text mt-1'>
+      <button
+        className='mt-4 px-6 py-2 rounded-lg bg-custom-primary text-white font-bold shadow hover:bg-yellow-600 transition-colors duration-200 text-base sm:text-sm w-full max-w-[300px]'
+        onClick={() => setIsFlipped((f) => !f)}
+        aria-pressed={isFlipped}
+      >
+        {isFlipped ? 'Voltar' : 'Virar carta'}
+      </button>
+      <p className='text-lg font-bold mt-2 break-words'>{title}</p>
+      {subtitle && <p className='text-sm font-bold mt-2 break-words'>{subtitle}</p>}
+      <p className='text-sm text-custom-gray-text mt-1 break-words'>
         Essa afirmação positiva é projetada para reforçar as qualidades e o tema de cada carta.
         Ajudando você a se conectar com seu poder interior e a sua jornada do autoconhecimento.{' '}
-        {affirmation}
+      </p>
+      <p className='text-xl italic text-primary text-bold mt-1 break-words'>
+        &#34;{affirmation}&#34;
       </p>
       {blend && (
         <div>
@@ -77,14 +78,14 @@ const Card = ({
           <div className='mt-4'>
             <p className='text-sm text-custom-start'>
               Blend de chás exclusivo das PoderRosas:{' '}
-              <p className='text-sm text-custom-gray-text'>{blend}</p>
+              <span className='text-sm text-custom-gray-text'>{blend}</span>
             </p>
           </div>
         </div>
       )}
       {power && (
         <div className='mt-4'>
-          <p className='text-sm text-custom-gray-text'>{power}</p>
+          <p className='text-sm text-custom-gray-text break-words'>{power}</p>
         </div>
       )}
       {suggested_music && (

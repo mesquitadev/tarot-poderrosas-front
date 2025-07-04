@@ -52,17 +52,19 @@ export default function CardOfDay() {
         Receba uma mensagem única para iluminar seu dia <br /> e guiar seus passos com inspiração e
         propósito.
       </p>
-      <div className='flex flex-col justify-center items-center w-full h-full'>
-        <div className=' justify-center justify-items-center gap-x-4 w-full'>
-          <Card
-            affirmation={card[0]?.affirmation}
-            suggested_music={card[0]?.suggestedMusic}
-            title={card[0]?.title}
-            blend={card[0]?.blend}
-            power={card[0]?.power}
-            backImg={card[0]?.img}
-            frontImg={cardBack}
-          />
+      <div className='flex flex-col justify-center items-center w-full h-full px-2 sm:px-8 pb-8'>
+        <div className='w-full flex justify-center'>
+          <div className='w-full max-w-[400px] sm:max-w-[300px]'>
+            <Card
+              affirmation={card[0]?.affirmation}
+              suggested_music={card[0]?.suggestedMusic}
+              title={card[0]?.title}
+              blend={card[0]?.blend}
+              power={card[0]?.power}
+              backImg={card[0]?.img}
+              frontImg={cardBack}
+            />
+          </div>
         </div>
         <div className='flex flex-row justify-center'>
           <button

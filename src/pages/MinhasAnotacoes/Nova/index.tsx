@@ -1,11 +1,11 @@
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import api from '@/services';
 import { useNavigate } from 'react-router-dom';
 
 const CriarAnotacao = () => {
-  const { control, handleSubmit, register } = useForm();
+  const { control, handleSubmit, register, setValue } = useForm();
   const navigate = useNavigate();
 
   const onSubmit = async (data: any) => {
@@ -32,21 +32,19 @@ const CriarAnotacao = () => {
           <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='content'>
             Conteúdo
           </label>
-          <Controller
-            name='content'
-            control={control}
-            defaultValue=''
-            render={({ field }) => <ReactQuill {...field} />}
+          <ReactQuill
+            theme='snow'
+            value={control._formValues?.content || ''}
+            onChange={(content) => setValue('content', content, { shouldValidate: true })}
+            className='bg-white'
           />
         </div>
-        <div className='flex items-center justify-between'>
-          <button
-            type='submit'
-            className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
-          >
-            Salvar
-          </button>
-        </div>
+        <button
+          type='submit'
+          className='bg-custom-primary hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
+        >
+          Salvar
+        </button>
       </form>
     </div>
   );

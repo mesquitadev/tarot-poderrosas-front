@@ -40,7 +40,7 @@ export default function Tarot() {
         <p className='font-raleway text-sm'>
           Escolha suas cartas e conecte-se com sua sabedoria interior
         </p>
-        <div className='flex flex-col h-full items-center justify-center'>
+        <div className='flex flex-col items-center justify-center'>
           <div className='grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3  justify-around justify-items-center gap-x-4 w-full'>
             <Card
               onClick={() => navigate('/tarot/carta-do-dia')}
