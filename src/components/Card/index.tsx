@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { tw } from '@/utils/tw';
 import './styles.css';
-import YouTubeMusicPlayer from '@/components/YouTubeMusicPlayer';
 
 const Card = ({
   frontImg,
@@ -12,7 +11,6 @@ const Card = ({
   suggested_music,
   blend,
   power,
-  incense,
 }: {
   frontImg: string;
   backImg: string;

@@ -5,7 +5,7 @@ import back_cinco_cartas from '../../assets/back_cinco_cartas.svg';
 import './style.css';
 import { useNavigate } from 'react-router';
 import VideoModal from '@/components/VIdeoModal';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { tw } from '@/utils/tw';
 
 const TarotCardButton = ({
@@ -13,7 +13,7 @@ const TarotCardButton = ({
   subtitle,
   onClick,
   ...rest
-}: {
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
   background: string;
   subtitle: string;
   onClick: () => void;
