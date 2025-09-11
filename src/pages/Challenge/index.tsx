@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import api from '@/services';
 import { addDays, format, startOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import AddNoteModal from '@/components/AddNoteModal';
 
 const WeekDays = () => {
   const daysOfWeek = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
@@ -11,6 +12,7 @@ const WeekDays = () => {
   const [selectedDayIndex, setSelectedDayIndex] = useState<number>(currentDayIndex);
   const [missions, setMissions] = useState<any[]>([]);
   const [mission, setMission] = useState<any>(null);
+  const [isAddNoteOpen, setIsAddNoteOpen] = useState(false);
 
   const fetchMissions = useCallback(async () => {
     const response = await api.get('/missions');
@@ -58,14 +60,27 @@ const WeekDays = () => {
         );
       })}
       {mission && (
-        <div className='mt-2 h-[150px] w-full justify-center items-center bg-white rounded drop-shadow'>
-          <div className='flex flex-col p-4 w-full h-full  relative justify-center'>
+        <div className='mt-2 w-full justify-center items-center bg-white rounded drop-shadow'>
+          <div className='flex flex-col p-4 w-full h-full relative justify-center'>
             <div className='absolute left-0 h-20 w-2 bg-custom-start'></div>
             <p className='text-lg text-custom-start'>{mission.title}</p>
-            <p className='text-sm text-custom-start'>{mission.task}</p>
+            <p className='text-sm text-custom-start mb-3'>{mission.task}</p>
+            <div className='flex justify-end'>
+              <button
+                onClick={() => setIsAddNoteOpen(true)}
+                className='text-sm text-white bg-custom-start px-3 py-2 rounded'
+              >
+                Adicionar Anotação
+              </button>
+            </div>
           </div>
         </div>
       )}
+      <AddNoteModal
+        isOpen={isAddNoteOpen}
+        onClose={() => setIsAddNoteOpen(false)}
+        defaultTitle={mission?.title ? `Desafio: ${mission.title}` : ''}
+      />
     </div>
   );
 };

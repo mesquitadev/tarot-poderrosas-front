@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { tw } from '@/utils/tw';
 import './styles.css';
+import YouTubeMusicPlayer from '@/components/YouTubeMusicPlayer';
 
 const Card = ({
   frontImg,
@@ -10,6 +12,7 @@ const Card = ({
   suggested_music,
   blend,
   power,
+  incense,
 }: {
   frontImg: string;
   backImg: string;
@@ -22,24 +25,27 @@ const Card = ({
   incense?: string;
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
-  useEffect(() => {
-    console.log('');
-  }, []);
   return (
-    <div className='flex flex-col items-center justify-center m-2 text-center w-full max-w-[400px] sm:max-w-[300px] xs:max-w-full'>
+    <div
+      className={tw(
+        'flex flex-col items-center justify-center m-2 text-center w-full max-w-[400px] sm:max-w-[300px] xs:max-w-full',
+      )}
+    >
       <div
-        className={`flip-card ${
-          isFlipped ? 'flipped' : ''
-        } w-full max-w-[400px] sm:max-w-[300px] xs:max-w-full`}
+        className={tw(
+          'flip-card',
+          isFlipped ? 'flipped' : '',
+          'w-full max-w-[400px] sm:max-w-[300px] xs:max-w-full',
+        )}
         role='region'
         aria-label='Carta do Tarot'
       >
-        <div className='flip-card-inner h-full pointer-events-none'>
+        <div className='flip-card-inner h-full'>
           <div className='flip-card-front h-full'>
             <img
               src={frontImg}
               style={{ border: '5px solid rgba(245, 158, 11, 1)', height: '100%', width: '100%' }}
-              className='object-cover rounded-[15px] shadow-sm'
+              className={tw('object-cover rounded-[15px] shadow-sm')}
               alt='Front'
             />
           </div>
@@ -47,49 +53,52 @@ const Card = ({
             <img
               src={backImg}
               style={{ border: '5px solid rgba(245, 158, 11, 1)', height: '100%', width: '100%' }}
-              className='object-cover rounded-[15px] shadow-sm'
+              className={tw('object-cover rounded-[15px] shadow-sm')}
               alt='Back'
             />
           </div>
         </div>
       </div>
       <button
-        className='mt-4 px-6 py-2 rounded-lg bg-custom-primary text-white font-bold shadow hover:bg-yellow-600 transition-colors duration-200 text-base sm:text-sm w-full max-w-[300px]'
+        className={tw(
+          'mt-4 px-6 py-2 rounded-lg bg-custom-primary text-white font-bold shadow hover:bg-yellow-600 transition-colors duration-200 text-base sm:text-sm w-full max-w-[300px]',
+        )}
         onClick={() => setIsFlipped((f) => !f)}
         aria-pressed={isFlipped}
       >
         {isFlipped ? 'Voltar' : 'Virar carta'}
       </button>
-      <p className='text-lg font-bold mt-2 break-words'>{title}</p>
-      {subtitle && <p className='text-sm font-bold mt-2 break-words'>{subtitle}</p>}
-      <p className='text-sm text-custom-gray-text mt-1 break-words'>
+      <p className={tw('text-lg font-bold mt-2 break-words')}>{title}</p>
+      {subtitle && <p className={tw('text-sm font-bold mt-2 break-words')}>{subtitle}</p>}
+      <p className={tw('text-sm text-custom-gray-text mt-1 break-words')}>
         Essa afirmação positiva é projetada para reforçar as qualidades e o tema de cada carta.
         Ajudando você a se conectar com seu poder interior e a sua jornada do autoconhecimento.{' '}
       </p>
-      <p className='text-xl italic text-primary text-bold mt-1 break-words'>
+      <p className={tw('text-xl italic text-primary text-bold mt-1 break-words')}>
         &#34;{affirmation}&#34;
       </p>
       {blend && (
         <div>
-          <p className='my-5 text-sm'>
+          <p className={tw('my-5 text-sm')}>
             Como sugestão para refletir sobre essa carta, tome o blend abaixo e ouça a música
             relacionada à sua carta escolhida.
           </p>
-          <div className='mt-4'>
-            <p className='text-sm text-custom-start'>
+          <div className={tw('mt-4')}>
+            <p className={tw('text-sm text-custom-start')}>
               Blend de chás exclusivo das PoderRosas:{' '}
-              <span className='text-sm text-custom-gray-text'>{blend}</span>
+              <span className={tw('text-sm text-custom-gray-text')}>{blend}</span>
             </p>
           </div>
         </div>
       )}
       {power && (
-        <div className='mt-4'>
-          <p className='text-sm text-custom-gray-text break-words'>{power}</p>
+        <div className={tw('mt-4')}>
+          <p className={tw('text-sm text-custom-gray-text break-words')}>{power}</p>
         </div>
       )}
       {suggested_music && (
-        <div className='mt-10 w-full'>
+        <div className={tw('mt-10 w-full')}>
+          {/*<YouTubeMusicPlayer url='https://www.youtube.com/watch?v=r7XhWUDj-Ts&list=RDr7XhWUDj-Ts&start_radio=1' />*/}
           <iframe
             title='music'
             style={{ borderRadius: '10px' }}

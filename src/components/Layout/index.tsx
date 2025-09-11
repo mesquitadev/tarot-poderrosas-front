@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FaCalendar, FaEdit, FaHome, FaSignOutAlt, FaStar } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
-import { Bars3Icon, ExclamationTriangleIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import Cookies from 'js-cookie';
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
+import { tw } from '@/utils/tw';
 
 import logo from '../../assets/PoderRosa_logo_Branca.svg';
 import { useAuth } from '@/hooks/useAuth';
@@ -11,29 +12,11 @@ import { getGreeting } from '@/utils';
 import PetalsRain from '../PetalsRain';
 
 const SidebarLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // sidebar fechado por padrão
   const [openSignOutModal, setOpenSignOutModal] = useState(false);
+  const [openMobileMenu, setOpenMobileMenu] = useState(false);
   const { signOut } = useAuth();
   const location = useLocation();
   const user = Cookies.get('poderrosas.user') ? JSON.parse(Cookies.get('poderrosas.user')!) : null;
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setIsMobile(true);
-        setIsSidebarOpen(false); // sempre fechado no mobile por padrão
-      } else {
-        setIsMobile(false);
-        setIsSidebarOpen(true); // aberto no desktop
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   const handleSignOut = () => {
     setOpenSignOutModal((state) => !state);
@@ -63,90 +46,139 @@ const SidebarLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
     <div className='flex h-screen'>
       <PetalsRain />
-      {/* Sidebar */}
+      {/* Sidebar - só aparece em telas md+ */}
       <div
-        className={`custom-gradient-sidebar text-white fixed z-40 flex flex-col justify-between transition-all duration-500 ease-in-out
-          ${isMobile ? 'top-14 left-0' : 'top-0 left-0'}
-          ${
-            isMobile
-              ? isSidebarOpen
-                ? 'w-full opacity-100 visible'
-                : 'w-0 opacity-0 invisible'
-              : isSidebarOpen
-              ? 'w-64 opacity-100 visible'
-              : 'w-20 opacity-100 visible'
-          }
-        `}
+        className={tw(
+          'custom-gradient-sidebar text-white fixed z-40 flex flex-col justify-between transition-all duration-500 ease-in-out',
+          'top-0 left-0 w-64 opacity-100 visible',
+          'hidden md:flex',
+        )}
         style={{
           transitionProperty: 'width, opacity, visibility',
-          height: isMobile ? 'calc(100% - 56px)' : '100%',
+          height: '100%',
         }}
       >
-        {/* Topo do sidebar com logo e botão fechar no mobile */}
+        {/* Topo do sidebar com logo */}
         <div className='flex items-center justify-between px-4 pt-4 pb-2'>
           <img src={logo} alt='PoderRosa Logo' className='w-32 h-auto' />
         </div>
         <nav className='pt-4 flex-1'>
           {links.map((link) => (
-            <div key={link.to}>
-              <Link
-                to={link.to}
-                className={`font-merryweather font-light hover:font-bold relative py-2.5 px-4 mb-1 transition duration-200 hover:bg-custom-primary flex items-center ${
-                  isSidebarOpen ? '' : 'justify-center text-center'
-                } ${location.pathname.startsWith(link.startsWith) ? 'bg-custom-primary' : ''}`}
-                onClick={() => isMobile && setIsSidebarOpen(false)}
-              >
-                <link.icon className={`mr-2 ${isSidebarOpen ? '' : 'm-0'}`} />
-                {isSidebarOpen && link.label}
-                {location.pathname.startsWith(link.startsWith) && (
-                  <span className='absolute top-0 right-0 w-1 h-full bg-yellow-500'></span>
-                )}
-              </Link>
-            </div>
+            <Link
+              key={link.to}
+              to={link.to}
+              aria-current={location.pathname.startsWith(link.startsWith) ? 'page' : undefined}
+              className={tw(
+                'font-merryweather font-light relative py-2.5 px-4 mb-1 transition duration-200 flex items-center hover:bg-custom-primary',
+                location.pathname.startsWith(link.startsWith) ? 'bg-custom-primary font-bold' : '',
+              )}
+            >
+              <link.icon className={tw('mr-2')} />
+              {link.label}
+              {location.pathname.startsWith(link.startsWith) && (
+                <span className='absolute top-0 right-0 w-1 h-full bg-yellow-500'></span>
+              )}
+            </Link>
           ))}
         </nav>
         <footer className='p-4'>
           <button
             onClick={handleSignOut}
-            className='text-white py-2 px-4 hover:bg-custom-primary flex items-center w-full'
+            className={tw('text-white py-2 px-4 hover:bg-custom-primary flex items-center w-full')}
           >
-            <FaSignOutAlt className='mr-2' size={24} />
+            <FaSignOutAlt className={tw('mr-2')} size={24} />
             Sair da plataforma
           </button>
         </footer>
       </div>
-      {/* Main Content */}
+      {/* Sidebar mobile - drawer */}
       <div
-        className={`flex-1 transition-all duration-500 ${
-          isSidebarOpen && !isMobile ? 'ml-64' : 'ml-0'
-        } overflow-y-auto`}
+        className={tw(
+          'fixed z-50 inset-0 flex md:hidden',
+          openMobileMenu ? 'visible' : 'invisible pointer-events-none',
+        )}
+        style={{ background: openMobileMenu ? 'rgba(0,0,0,0.5)' : 'transparent' }}
+        onClick={() => setOpenMobileMenu(false)}
       >
+        <div
+          className={tw(
+            'custom-gradient-sidebar text-white flex flex-col justify-between h-full w-64 transition-transform duration-300',
+            openMobileMenu ? 'translate-x-0' : '-translate-x-full',
+          )}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className='flex items-center justify-between px-4 pt-4 pb-2'>
+            <img src={logo} alt='PoderRosa Logo' className='w-32 h-auto' />
+            <button
+              onClick={() => setOpenMobileMenu(false)}
+              className={tw(
+                'text-white p-2 rounded-md hover:bg-white hover:text-custom-primary transition',
+              )}
+              aria-label='Fechar menu lateral'
+            >
+              <span className='text-2xl'>&times;</span>
+            </button>
+          </div>
+          <nav className='pt-4 flex-1'>
+            {links.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                aria-current={location.pathname.startsWith(link.startsWith) ? 'page' : undefined}
+                className={tw(
+                  'font-merryweather font-light relative py-2.5 px-4 mb-1 transition duration-200 flex items-center hover:bg-custom-primary',
+                  location.pathname.startsWith(link.startsWith)
+                    ? 'bg-custom-primary font-bold'
+                    : '',
+                )}
+                onClick={() => setOpenMobileMenu(false)}
+              >
+                <link.icon className={tw('mr-2')} />
+                {link.label}
+                {location.pathname.startsWith(link.startsWith) && (
+                  <span className='absolute top-0 right-0 w-1 h-full bg-yellow-500'></span>
+                )}
+              </Link>
+            ))}
+          </nav>
+          <footer className='p-4'>
+            <button
+              onClick={handleSignOut}
+              className={tw(
+                'text-white py-2 px-4 hover:bg-custom-primary flex items-center w-full',
+              )}
+            >
+              <FaSignOutAlt className={tw('mr-2')} size={24} />
+              Sair da plataforma
+            </button>
+          </footer>
+        </div>
+      </div>
+      {/* Main Content */}
+      <div className={tw('flex-1 transition-all duration-500', 'ml-0 md:ml-64', 'overflow-y-auto')}>
         {/* Top Bar */}
         <div
-          className='bg-gradient-to-r from-custom-start to-custom-end text-white px-4 py-3 flex justify-between items-center fixed top-0 left-0 right-0 z-10 transition-all duration-500'
+          className={tw(
+            'bg-gradient-to-r from-custom-start to-custom-end text-white px-4 py-3 flex justify-between items-center fixed top-0 left-0 right-0 z-10 transition-all duration-500',
+          )}
           style={{ minHeight: '56px', height: '56px', position: 'relative' }}
         >
-          {/* Botão do menu à esquerda */}
-          <div className='flex items-center'>
-            {isMobile && (
-              <button
-                onClick={() => setIsSidebarOpen((open) => !open)}
-                className='bg-custom-primary text-white flex justify-center items-center p-2 rounded-md shadow-md md:hidden transition-all duration-300'
-                style={{ width: 44, height: 44 }}
-                aria-label={isSidebarOpen ? 'Fechar menu lateral' : 'Abrir menu lateral'}
-                type='button'
-              >
-                {isSidebarOpen ? (
-                  <XMarkIcon className='w-6 h-6' />
-                ) : (
-                  <Bars3Icon className='w-6 h-6' />
-                )}
-              </button>
-            )}
+          {/* Botão menu mobile */}
+          <div className={tw('flex items-center md:hidden')}>
+            <button
+              onClick={() => setOpenMobileMenu(true)}
+              className={tw(
+                'bg-custom-primary text-white flex justify-center items-center p-2 rounded-md shadow-md transition-all duration-300',
+              )}
+              style={{ width: 44, height: 44 }}
+              aria-label='Abrir menu lateral'
+              type='button'
+            >
+              <span className='text-2xl'>&#9776;</span>
+            </button>
           </div>
-          {/* Saudação alinhada à direita */}
-          <div className='flex items-center'>
-            <span className='text-sm'>
+          <div className={tw('flex items-center')}>
+            <span className={tw('text-sm')}>
               {getGreeting()}, {user ? user.fullName : 'Usuário'}
             </span>
           </div>

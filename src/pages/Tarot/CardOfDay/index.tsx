@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Card from '@/components/Card';
 import HowToPlay from '@/components/HowToPlay';
 import api from '@/services';
-import { useNavigate } from 'react-router';
+import AddNoteModal from '@/components/AddNoteModal';
 import cardBack from '@/assets/back-card.svg';
 
 interface CardData {
@@ -19,7 +19,7 @@ interface CardData {
 }
 export default function CardOfDay() {
   const [card, setCard] = useState<CardData[]>([]);
-  const navigate = useNavigate();
+  const [isAddNoteOpen, setIsAddNoteOpen] = useState(false);
 
   const handleNewDraw = () => {
     fetchRandomCards();
@@ -59,6 +59,7 @@ export default function CardOfDay() {
               affirmation={card[0]?.affirmation}
               suggested_music={card[0]?.suggestedMusic}
               title={card[0]?.title}
+              subtitle={card[0]?.subtitle}
               blend={card[0]?.blend}
               power={card[0]?.power}
               backImg={card[0]?.img}
@@ -75,14 +76,19 @@ export default function CardOfDay() {
           </button>
 
           <button
-            onClick={() => navigate('/minhas-anotacoes/nova')}
+            onClick={() => setIsAddNoteOpen(true)}
             className='mt-4 text-sm text-white bg-custom-start p-2 rounded'
           >
-            Criar Anotação
+            Adicionar Anotação
           </button>
         </div>
         <HowToPlay />
       </div>
+      <AddNoteModal
+        isOpen={isAddNoteOpen}
+        onClose={() => setIsAddNoteOpen(false)}
+        defaultTitle={card[0]?.title ? `Carta do Dia: ${card[0]?.title}` : ''}
+      />
     </div>
   );
 }
