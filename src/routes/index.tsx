@@ -16,6 +16,7 @@ import {
   ThreeCards,
 } from '@/pages';
 import { PublicRoute, PrivateRoute } from './Route';
+import SignIn from '@/pages/SignIn';
 
 function AppRoutes() {
   return (
@@ -23,7 +24,9 @@ function AppRoutes() {
       <Routes>
         <Route element={<PublicRoute />}>
           <Route path='/' element={<SignUp />} />
+          <Route path='/cadastro' element={<SignIn />} />
           <Route path='/ativar-conta' element={<ActivateAccount />} />
+          <Route path='/ativar-conta/:token' element={<ActivateAccount />} />
         </Route>
 
         <Route path='/inicio' element={<PrivateRoute />}>

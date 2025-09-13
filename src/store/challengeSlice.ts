@@ -1,0 +1,20 @@
+// Re-export dos hooks RTK Query do Challenge
+export {
+  useGetChallengesQuery,
+  useGetChallengeQuery,
+  useGetCurrentWeekChallengeQuery,
+  useCompleteMissionMutation,
+  useUncompleteMissionMutation,
+  useJoinChallengeMutation,
+  useLeaveChallengeMutation,
+  useGetChallengeProgressQuery,
+  useGetChallengeStatsQuery,
+  useLazyGetChallengesQuery,
+  useLazyGetChallengeQuery,
+  useLazyGetCurrentWeekChallengeQuery,
+  useLazyGetChallengeProgressQuery,
+  useLazyGetChallengeStatsQuery,
+  type Challenge,
+  type WeeklyChallenge,
+  type ChallengeProgress,
+} from '@/services/challengeApiSlice';

@@ -1,4 +1,6 @@
-import { createContext, ReactNode, useMemo, useState } from 'react';
+import { createContext, ReactNode, useMemo } from 'react';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { setLoading } from '@/store/uiSlice';
 
 export type LoadingContextData = {
   loading: boolean;
@@ -7,19 +9,20 @@ export type LoadingContextData = {
 
 export const LoadingContext = createContext({} as LoadingContextData);
 
-type AuthContextProps = {
+ type AuthContextProps = {
   children: ReactNode;
 };
 
-export function LoadingProvider({ children }: AuthContextProps) {
-  const [loading, setLoading] = useState(false);
+ export function LoadingProvider({ children }: AuthContextProps) {
+  const dispatch = useAppDispatch();
+  const loading = useAppSelector((state) => state.ui.loading);
 
   const updatedValue = useMemo(
     () => ({
       loading,
-      setLoading,
+      setLoading: (value: boolean) => dispatch(setLoading(value)),
     }),
-    [loading],
+    [dispatch, loading],
   );
   return <LoadingContext.Provider value={updatedValue}>{children}</LoadingContext.Provider>;
 }

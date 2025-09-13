@@ -1,105 +1,180 @@
 import './style.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Card from '@/components/Card';
 import HowToPlay from '@/components/HowToPlay';
-import api from '@/services';
 import cardBack from '@/assets/back-card.svg';
-
-interface CardData {
-  id: number;
-  card: string;
-  title: string;
-  subtitle: string;
-  affirmation: string;
-  img: string;
-  suggestedMusic: string;
-  blend: string;
-  power: string;
-}
+import {
+  useGetThreeRandomCardsQuery,
+  useLazyGetThreeRandomCardsQuery,
+} from '@/services/cardsApiSlice';
+import {
+  SparklesIcon,
+  ArrowPathIcon,
+  QuestionMarkCircleIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline';
 
 export default function ThreeCards() {
-  const [cards, setCards] = useState<CardData[]>([]);
   const [showTutorial, setShowTutorial] = useState(false);
+  const {
+    data: initialCards,
+    isLoading: initialLoading,
+    error: initialError,
+  } = useGetThreeRandomCardsQuery();
+  const [getThreeCards, { data: newCards, isLoading: newLoading, error: newError }] =
+    useLazyGetThreeRandomCardsQuery();
+
+  // Usa as cartas mais recentes (novas ou iniciais)
+  const cards = newCards || initialCards || [];
+  const isLoading = newLoading || initialLoading;
+  const error = newError || initialError;
+
   const handleNewDraw = () => {
-    fetchRandomCards();
+    getThreeCards();
   };
 
-  const fetchRandomCards = async () => {
-    try {
-      const response = await api.get('/cards', {
-        params: {
-          limit: 3,
-          random: true,
-        },
-      });
-      setCards(response.data);
-    } catch (error) {
-      console.error('Error fetching random cards:', error);
-      throw error;
-    }
-  };
-
-  useEffect(() => {
-    fetchRandomCards();
-  }, []);
+  const cardTitles = ['Passado', 'Presente', 'Futuro'];
 
   return (
-    <div className='flex flex-col w-full h-full text-center px-2 sm:px-8 pb-8'>
-      <div className='flex flex-col sm:flex-row justify-between items-center w-full relative mb-2 gap-2'>
-        <p className='text-md text-custom-gray-text mb-2 sm:mb-0'>
-          Três Cartas como Inspiração para Clarear uma Situação
-        </p>
-        <button
-          className='sm:absolute sm:right-0 text-sm text-white bg-custom-start p-2 rounded shadow hover:bg-custom-primary transition-colors duration-200 w-full sm:w-auto'
-          onClick={() => setShowTutorial(true)}
-        >
-          Tutorial
-        </button>
-      </div>
-      <p className='text-sm text-custom-gray-text mb-4'>
-        Receba uma mensagem única para iluminar seu dia <br /> e guiar seus passos com inspiração e
-        propósito.
-      </p>
-      <div className='flex flex-col w-full h-full text-center'>
-        <div className='flex justify-center items-center w-full relative mb-2'>
-          <p className='text-md text-custom-gray-text font-bold'>Três Cartas</p>
-        </div>
-        <div className='flex justify-center items-center w-full'>
-          <div className='grid grid-cols-1 sm:grid-cols-3 gap-4 justify-items-center w-full max-w-5xl'>
-            {cards.map((card) => (
-              <Card
-                key={card?.id}
-                affirmation={card?.affirmation}
-                suggested_music={card?.suggestedMusic}
-                title={card?.title}
-                blend={card?.blend}
-                power={card?.power}
-                backImg={card?.img}
-                frontImg={cardBack}
-              />
-            ))}
+    <div className='flex flex-col w-full min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-white'>
+      {/* Header */}
+      <div className='text-center py-8 px-4'>
+        <div className='flex flex-col sm:flex-row justify-between items-center max-w-6xl mx-auto gap-4'>
+          <div className='text-left'>
+            <div className='relative inline-block mb-2'>
+              <div className='absolute -inset-2 bg-gradient-to-r from-custom-primary to-purple-600 rounded-lg blur opacity-20'></div>
+              <h1 className='relative font-merryweather text-2xl md:text-3xl font-bold bg-gradient-to-r from-custom-primary via-purple-600 to-pink-600 bg-clip-text text-transparent'>
+                O Buquê da Rosa
+              </h1>
+            </div>
+            <p className='text-gray-600 text-left'>
+              Três cartas sagradas revelam sua jornada: passado, presente e futuro em harmonia.
+            </p>
           </div>
-        </div>
-        <div className='flex flex-row justify-center mt-6'>
+
           <button
-            className='bg-custom-primary hover:bg-custom-start text-white font-bold py-2 px-6 rounded shadow focus:outline-none focus:shadow-outline w-full sm:w-auto transition-colors duration-200'
-            onClick={handleNewDraw}
+            onClick={() => setShowTutorial(true)}
+            className='group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-gray-100 to-gray-200 hover:from-custom-primary hover:to-purple-600 text-gray-700 hover:text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105'
           >
-            Sortear Novas Cartas
+            <QuestionMarkCircleIcon className='w-5 h-5 group-hover:scale-110 transition-transform duration-300' />
+            <span>Tutorial</span>
           </button>
         </div>
       </div>
-      {/* Modal de tutorial */}
-      {showTutorial && (
-        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
-          <div className='bg-white rounded-lg p-6 max-w-md w-full relative'>
+
+      {/* Content */}
+      <div className='flex-1 flex flex-col justify-center items-center px-4 pb-8'>
+        {isLoading ? (
+          <div className='relative'>
+            <div className='absolute -inset-4 bg-gradient-to-r from-custom-primary to-purple-600 rounded-full blur opacity-20 animate-pulse'></div>
+            <div className='relative bg-white rounded-2xl p-8 shadow-2xl border border-gray-100'>
+              <div className='flex flex-col items-center space-y-4'>
+                <SparklesIcon className='w-12 h-12 text-custom-primary animate-spin' />
+                <p className='text-lg font-medium text-gray-700'>
+                  🌹 Preparando seu Buquê da Rosa...
+                </p>
+                <div className='flex space-x-1'>
+                  <div className='w-2 h-2 bg-custom-primary rounded-full animate-bounce'></div>
+                  <div
+                    className='w-2 h-2 bg-purple-600 rounded-full animate-bounce'
+                    style={{ animationDelay: '0.1s' }}
+                  ></div>
+                  <div
+                    className='w-2 h-2 bg-pink-600 rounded-full animate-bounce'
+                    style={{ animationDelay: '0.2s' }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : error ? (
+          <div className='bg-white rounded-2xl p-8 shadow-2xl border border-red-100 max-w-md w-full'>
+            <div className='flex flex-col items-center space-y-4'>
+              <div className='w-16 h-16 bg-red-100 rounded-full flex items-center justify-center'>
+                <SparklesIcon className='w-8 h-8 text-red-500' />
+              </div>
+              <h3 className='text-xl font-bold text-red-600'>Oops! Algo deu errado</h3>
+              <p className='text-gray-600'>Não foi possível carregar suas cartas especiais</p>
+              <button
+                onClick={handleNewDraw}
+                className='flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105'
+              >
+                <ArrowPathIcon className='w-5 h-5' />
+                Tentar Novamente
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Cards Grid */}
+            <div className='w-full max-w-6xl mb-8'>
+              <div className='grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center'>
+                {cards.map((card, index) => (
+                  <div key={card?.id || index} className='relative group'>
+                    <div className='absolute -inset-2 bg-gradient-to-r from-custom-primary via-purple-600 to-pink-600 rounded-3xl blur opacity-20 group-hover:opacity-30 transition-opacity duration-300'></div>
+                    <div className='relative'>
+                      {/* Card Title */}
+                      <div className='text-center mb-4'>
+                        <div className='inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-custom-primary to-purple-600 text-white rounded-xl font-medium shadow-lg'>
+                          <SparklesIcon className='w-4 h-4' />
+                          <span>{cardTitles[index]}</span>
+                        </div>
+                      </div>
+
+                      <Card
+                        affirmation={card?.affirmation}
+                        suggested_music={card?.suggestedMusic}
+                        title={card?.title}
+                        blend={card?.blend}
+                        power={card?.power}
+                        backImg={card?.img}
+                        frontImg={cardBack}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Action Button */}
             <button
-              className='absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl font-bold'
-              onClick={() => setShowTutorial(false)}
+              onClick={handleNewDraw}
+              disabled={isLoading}
+              className='group flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-custom-primary to-purple-600 hover:from-purple-600 hover:to-custom-primary text-white rounded-2xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-lg'
             >
-              ×
+              <ArrowPathIcon
+                className={`w-6 h-6 ${
+                  isLoading ? 'animate-spin' : 'group-hover:rotate-180'
+                } transition-transform duration-300`}
+              />
+              <span>{isLoading ? '🌹 Sorteando...' : 'Sortear Novas Cartas'}</span>
             </button>
-            <HowToPlay />
+          </>
+        )}
+      </div>
+
+      {/* Tutorial Modal */}
+      {showTutorial && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4'>
+          <div className='relative bg-white rounded-2xl shadow-2xl border border-gray-100 max-w-2xl w-full max-h-[80vh] overflow-y-auto'>
+            <div className='sticky top-0 bg-white border-b border-gray-100 px-6 py-4 rounded-t-2xl'>
+              <div className='flex items-center justify-between'>
+                <h3 className='text-xl font-bold text-gray-800 flex items-center gap-2'>
+                  <QuestionMarkCircleIcon className='w-6 h-6 text-custom-primary' />
+                  Como Jogar
+                </h3>
+                <button
+                  onClick={() => setShowTutorial(false)}
+                  className='p-2 hover:bg-gray-100 rounded-full transition-colors duration-200'
+                >
+                  <XMarkIcon className='w-6 h-6 text-gray-500 hover:text-red-500' />
+                </button>
+              </div>
+            </div>
+
+            <div className='p-6'>
+              <HowToPlay />
+            </div>
           </div>
         </div>
       )}
