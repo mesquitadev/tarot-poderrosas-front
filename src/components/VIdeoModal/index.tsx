@@ -15,12 +15,22 @@ const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose, videoUrl }) =>
           <h2 className='text-2xl font-bold text-custom-primary'>Assista ao vídeo</h2>
         </DialogHeader>
         <div className='aspect-video w-full flex items-center justify-center bg-black/5'>
+          {/*<iframe*/}
+          {/*  id='video-player'*/}
+          {/*  src={videoUrl}*/}
+          {/*  allow='accelerometer; gyroscope; autoplay; encrypted-media'*/}
+          {/*  allowFullScreen*/}
+          {/*  title='Video Player'*/}
+          {/*  */}
+          {/*></iframe>*/}
+
           <iframe
-            id='video-player'
             src={videoUrl}
-            allow='accelerometer; gyroscope; autoplay; encrypted-media'
+            width='640'
+            height='360'
+            allow='autoplay; fullscreen; encrypted-media; picture-in-picture'
             allowFullScreen
-            title='Video Player'
+            frameBorder='0'
             className='w-full h-full rounded-xl border-none shadow-lg mx-5'
           ></iframe>
         </div>
