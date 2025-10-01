@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { addDays, format, startOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -7,7 +6,7 @@ import uma_carta from '../../assets/uma-carta.svg';
 import tres_cartas from '../../assets/tres-cartas.svg';
 import cinco_cartas from '../../assets/estrela-cinco-cartas.svg';
 import { useNavigate } from 'react-router';
-import { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { getPhraseOfDay } from '@/utils';
 import { useGetMissionsQuery } from '@/services/missionsApiSlice';
 import { useGetDiaryEntriesQuery } from '@/services/diaryApiSlice';
@@ -104,34 +103,44 @@ const WeekDays = () => {
               {/* Botões de Compartilhamento */}
               <div className='flex items-center gap-2'>
                 <span className='text-sm text-gray-600 mr-2'>Compartilhar:</span>
-                <ShareButton
+                <LocalShareButton
                   title={`Desafio do Dia: ${mission.title}`}
                   text={`✨ ${mission.task}\n\nAcompanhe meus desafios diários no Poder Rosa!`}
                   platform='whatsapp'
                   className='p-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors duration-200'
                 >
-                  <svg className='w-4 h-4' fill='currentColor' viewBox='0 0 24 24'>
+                  <svg
+                    className='w-4 h-4'
+                    fill='currentColor'
+                    viewBox='0 0 24 24'
+                    aria-hidden='true'
+                  >
                     <path d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488' />
                   </svg>
-                </ShareButton>
+                </LocalShareButton>
 
-                <ShareButton
+                <LocalShareButton
                   title={`Desafio do Dia: ${mission.title}`}
                   text={`✨ ${mission.task}\n\nAcompanhe meus desafios diários no Poder Rosa!`}
                   platform='twitter'
                   className='p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-200'
                 >
-                  <svg className='w-4 h-4' fill='currentColor' viewBox='0 0 24 24'>
+                  <svg
+                    className='w-4 h-4'
+                    fill='currentColor'
+                    viewBox='0 0 24 24'
+                    aria-hidden='true'
+                  >
                     <path d='M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z' />
                   </svg>
-                </ShareButton>
+                </LocalShareButton>
 
-                <CopyLinkButton
+                <LocalCopyLinkButton
                   text={`✨ Desafio do Dia: ${mission.title}\n\n${mission.task}\n\nAcompanhe meus desafios diários no Poder Rosa! 🌹`}
                   className='p-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors duration-200'
                 >
                   <LinkIcon className='w-4 h-4' />
-                </CopyLinkButton>
+                </LocalCopyLinkButton>
               </div>
             </div>
             <StarIcon className='w-8 h-8 text-yellow-400 ml-4' />
@@ -142,127 +151,164 @@ const WeekDays = () => {
   );
 };
 
-// Componentes de Compartilhamento
-interface ShareButtonProps {
-  title: string;
-  text: string;
-  platform: 'whatsapp' | 'twitter' | 'instagram' | 'facebook';
-  className: string;
-  children: React.ReactNode;
+// Componentes de Compartilhamento Local
+interface LocalShareButtonProps {
+  readonly title: string;
+  readonly text: string;
+  readonly platform: 'whatsapp' | 'twitter' | 'instagram' | 'facebook';
+  readonly className?: string;
+  readonly children: React.ReactNode;
 }
 
-const ShareButton: React.FC<ShareButtonProps> = ({
-  title,
-  text,
-  platform,
-  className,
-  children,
-}) => {
-  const [isSharing, setIsSharing] = useState(false);
+const LocalShareButton = React.memo(
+  ({ title, text, platform, className = '', children }: LocalShareButtonProps) => {
+    const [isSharing, setIsSharing] = useState<boolean>(false);
 
-  const handleShare = async () => {
-    setIsSharing(true);
-
-    try {
-      // Usar Web Share API se disponível
-      if (navigator.share && platform === 'whatsapp') {
-        await navigator.share({
-          title,
-          text,
-        });
-        return;
-      }
-
-      // URLs específicas para cada plataforma
-      const shareUrls = {
+    const shareUrls = useMemo(
+      () => ({
         whatsapp: `https://wa.me/?text=${encodeURIComponent(text)}`,
         twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
-        instagram: `https://www.instagram.com/`, // Instagram não permite compartilhamento direto via URL
+        instagram: 'https://www.instagram.com/',
         facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
           window.location.href,
         )}&quote=${encodeURIComponent(text)}`,
-      };
+      }),
+      [text],
+    );
 
-      if (platform === 'instagram') {
-        // Para Instagram, copiar o texto para a área de transferência
-        await navigator.clipboard.writeText(text);
-        alert('Texto copiado! Cole no Instagram para compartilhar 📱✨');
-      } else {
-        window.open(shareUrls[platform], '_blank', 'width=600,height=400');
-      }
-    } catch (error) {
-      console.error('Erro ao compartilhar:', error);
-      // Fallback: copiar para área de transferência
+    const handleShare = useCallback(async (): Promise<void> => {
+      if (isSharing) return;
+
+      setIsSharing(true);
+
       try {
-        await navigator.clipboard.writeText(text);
-        alert('Texto copiado para a área de transferência! 📋✨');
-      } catch (clipboardError) {
-        console.error('Erro ao copiar:', clipboardError);
+        // Use Web Share API if available
+        if (navigator.share && platform === 'whatsapp') {
+          await navigator.share({ title, text });
+          return;
+        }
+
+        if (platform === 'instagram') {
+          // For Instagram, copy text to clipboard
+          await navigator.clipboard.writeText(text);
+          alert('Texto copiado! Cole no Instagram para compartilhar 📱✨');
+        } else {
+          const url = shareUrls[platform];
+          if (url) {
+            window.open(url, '_blank', 'width=600,height=400,noopener,noreferrer');
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao compartilhar:', error);
+        // Fallback: copy to clipboard
+        try {
+          await navigator.clipboard.writeText(text);
+          alert('Texto copiado para a área de transferência! 📋✨');
+        } catch (clipboardError) {
+          console.error('Erro ao copiar:', clipboardError);
+        }
+      } finally {
+        setTimeout(() => setIsSharing(false), 1000);
       }
-    } finally {
-      setTimeout(() => setIsSharing(false), 1000);
-    }
-  };
+    }, [isSharing, platform, shareUrls, text, title]);
 
-  return (
-    <button
-      onClick={handleShare}
-      disabled={isSharing}
-      className={`${className} ${isSharing ? 'animate-pulse' : ''} relative overflow-hidden`}
-      title={`Compartilhar no ${platform}`}
-    >
-      {isSharing ? (
-        <div className='w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin' />
-      ) : (
-        children
-      )}
-    </button>
-  );
-};
+    const platformLabel = useMemo(() => {
+      const labels: Record<typeof platform, string> = {
+        whatsapp: 'WhatsApp',
+        twitter: 'Twitter',
+        instagram: 'Instagram',
+        facebook: 'Facebook',
+      };
+      return labels[platform];
+    }, [platform]);
 
-interface CopyLinkButtonProps {
-  text: string;
-  className: string;
-  children: React.ReactNode;
+    return (
+      <button
+        onClick={handleShare}
+        disabled={isSharing}
+        className={`${className} ${
+          isSharing ? 'animate-pulse' : ''
+        } relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed`}
+        title={`Compartilhar no ${platformLabel}`}
+        aria-label={`Compartilhar no ${platformLabel}`}
+        type='button'
+      >
+        {isSharing ? (
+          <div
+            className='w-4 h-4 sm:w-5 sm:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin'
+            aria-hidden='true'
+          />
+        ) : (
+          children
+        )}
+      </button>
+    );
+  },
+);
+
+LocalShareButton.displayName = 'LocalShareButton';
+
+interface LocalCopyLinkButtonProps {
+  readonly text: string;
+  readonly className?: string;
+  readonly children: React.ReactNode;
 }
 
-const CopyLinkButton: React.FC<CopyLinkButtonProps> = ({ text, className, children }) => {
-  const [isCopied, setIsCopied] = useState(false);
+const LocalCopyLinkButton = React.memo(
+  ({ text, className = '', children }: LocalCopyLinkButtonProps) => {
+    const [isCopied, setIsCopied] = useState<boolean>(false);
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000);
-    } catch (error) {
-      console.error('Erro ao copiar:', error);
-      // Fallback para browsers mais antigos
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000);
-    }
-  };
+    const handleCopy = useCallback(async (): Promise<void> => {
+      if (isCopied) return;
 
-  return (
-    <button
-      onClick={handleCopy}
-      className={`${className} relative overflow-hidden`}
-      title='Copiar texto'
-    >
-      {isCopied ? <CheckIcon className='w-5 h-5' /> : children}
-      {isCopied && (
-        <div className='absolute -top-8 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-xs px-2 py-1 rounded whitespace-nowrap'>
-          Copiado! ✨
-        </div>
-      )}
-    </button>
-  );
-};
+      try {
+        await navigator.clipboard.writeText(text);
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000);
+      } catch (error) {
+        console.error('Erro ao copiar:', error);
+        // Fallback for older browsers
+        try {
+          const textArea = document.createElement('textarea');
+          textArea.value = text;
+          textArea.style.position = 'fixed';
+          textArea.style.opacity = '0';
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textArea);
+          setIsCopied(true);
+          setTimeout(() => setIsCopied(false), 2000);
+        } catch (fallbackError) {
+          console.error('Fallback copy failed:', fallbackError);
+        }
+      }
+    }, [text, isCopied]);
+
+    return (
+      <button
+        onClick={handleCopy}
+        className={`${className} relative overflow-hidden`}
+        title='Copiar texto'
+        aria-label='Copiar texto'
+        type='button'
+      >
+        {isCopied ? <CheckIcon className='w-4 h-4 sm:w-5 sm:h-5' /> : children}
+        {isCopied && (
+          <div
+            className='absolute -top-8 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10'
+            role='status'
+            aria-live='polite'
+          >
+            Copiado! ✨
+          </div>
+        )}
+      </button>
+    );
+  },
+);
+
+LocalCopyLinkButton.displayName = 'LocalCopyLinkButton';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -273,6 +319,16 @@ export default function Home() {
     isLoading: annotationsLoading,
     error: annotationsError,
   } = useGetDiaryEntriesQuery();
+
+  const reflexaoLabel = annotations.length === 1 ? 'reflexão' : 'reflexões';
+  const annotationsThisWeekCount = annotations.filter((a) => {
+    if (!a.createdAt) return false;
+    const annotationDate = new Date(a.createdAt);
+    const days = Math.floor(
+      (new Date().getTime() - annotationDate.getTime()) / (1000 * 60 * 60 * 24),
+    );
+    return days <= 7;
+  }).length;
 
   return (
     <div className='space-y-8 pb-8'>
@@ -390,7 +446,7 @@ export default function Home() {
                     <div className='flex items-center gap-1 text-gray-600'>
                       <DocumentTextIcon className='w-4 h-4' />
                       <span className='font-medium'>
-                        {annotations.length} {annotations.length === 1 ? 'reflexão' : 'reflexões'}
+                        {annotations.length} {reflexaoLabel}
                       </span>
                     </div>
                     {annotations.length > 0 && (
@@ -398,7 +454,9 @@ export default function Home() {
                         <ClockIcon className='w-4 h-4' />
                         <span>
                           Última:{' '}
-                          {format(new Date(annotations[0]?.createdAt || new Date()), 'dd/MM')}
+                          {annotations[0]?.createdAt
+                            ? format(new Date(annotations[0].createdAt), 'dd/MM')
+                            : format(new Date(), 'dd/MM')}
                         </span>
                       </div>
                     )}
@@ -486,17 +544,7 @@ export default function Home() {
                   </div>
                   <div className='bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl text-center'>
                     <FireIcon className='w-5 h-5 text-green-600 mx-auto mb-1' />
-                    <p className='text-2xl font-bold text-green-700'>
-                      {
-                        annotations.filter((a) => {
-                          const days = Math.floor(
-                            (new Date().getTime() - new Date(a.createdAt).getTime()) /
-                              (1000 * 60 * 60 * 24),
-                          );
-                          return days <= 7;
-                        }).length
-                      }
-                    </p>
+                    <p className='text-2xl font-bold text-green-700'>{annotationsThisWeekCount}</p>
                     <p className='text-xs text-green-600'>Esta semana</p>
                   </div>
                   <div className='bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-xl text-center'>
@@ -534,16 +582,26 @@ export default function Home() {
 
                     const config = configs[index % configs.length];
                     const IconComponent = config.icon;
+                    const createdAt = annotation.createdAt
+                      ? new Date(annotation.createdAt)
+                      : new Date();
                     const daysSince = Math.floor(
-                      (new Date().getTime() - new Date(annotation.createdAt).getTime()) /
-                        (1000 * 60 * 60 * 24),
+                      (new Date().getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24),
                     );
 
                     return (
-                      <div
+                      <button
                         key={annotation.id}
                         onClick={() => navigate('/minhas-anotacoes')}
-                        className={`group relative bg-gradient-to-br ${config.gradient} p-6 rounded-2xl shadow-xl text-white transition-all duration-500 hover:shadow-2xl hover:scale-[1.02] cursor-pointer overflow-hidden`}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            navigate('/minhas-anotacoes');
+                          }
+                        }}
+                        className={`group relative bg-gradient-to-br ${config.gradient} p-6 rounded-2xl shadow-xl text-white transition-all duration-500 hover:shadow-2xl hover:scale-[1.02] cursor-pointer overflow-hidden w-full text-left`}
+                        type='button'
+                        aria-label={`Abrir anotação: ${annotation.title || 'Sem título'}`}
                       >
                         {/* Elementos Decorativos */}
                         <div className='absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300'></div>
@@ -591,9 +649,11 @@ export default function Home() {
                           {/* Footer */}
                           <div className='flex items-center justify-between pt-3 border-t border-white/20'>
                             <div className='text-white/80 text-xs'>
-                              {format(new Date(annotation.createdAt), "d 'de' MMMM 'às' HH:mm", {
-                                locale: ptBR,
-                              })}
+                              {annotation.createdAt
+                                ? format(createdAt, "d 'de' MMMM 'às' HH:mm", {
+                                    locale: ptBR,
+                                  })
+                                : 'Data não disponível'}
                             </div>
                             <div className='flex items-center gap-2 text-white/90 group-hover:text-white transition-colors duration-300'>
                               <span className='text-sm font-medium'>Ler mais</span>
@@ -601,7 +661,7 @@ export default function Home() {
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </button>
                     );
                   })}
                 </div>
@@ -693,35 +753,45 @@ export default function Home() {
             <div className='flex items-center gap-2'>
               <ShareIcon className='w-5 h-5 text-gray-600 mr-2' />
               <div className='flex gap-2 overflow-x-auto scrollbar-hide pb-2'>
-                <ShareButton
+                <LocalShareButton
                   title='Mensagem Inspiradora do Dia'
                   text={`💝 "${phraseOfDay?.quote}"\n\n— ${phraseOfDay?.author}\n\nEncontre mais inspirações no Poder Rosa! 🌹✨`}
                   platform='whatsapp'
                   className='flex-shrink-0 p-2 sm:p-3 bg-green-500 hover:bg-green-600 text-white rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 sm:hover:scale-110 shadow-md hover:shadow-lg'
                 >
-                  <svg className='w-4 h-4 sm:w-5 sm:h-5' fill='currentColor' viewBox='0 0 24 24'>
+                  <svg
+                    className='w-4 h-4 sm:w-5 sm:h-5'
+                    fill='currentColor'
+                    viewBox='0 0 24 24'
+                    aria-hidden='true'
+                  >
                     <path d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488' />
                   </svg>
-                </ShareButton>
+                </LocalShareButton>
 
-                <ShareButton
+                <LocalShareButton
                   title='Mensagem Inspiradora do Dia'
                   text={`💝 "${phraseOfDay?.quote}"\n\n— ${phraseOfDay?.author}\n\nEncontre mais inspirações no Poder Rosa! 🌹✨`}
                   platform='instagram'
                   className='flex-shrink-0 p-2 sm:p-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 sm:hover:scale-110 shadow-md hover:shadow-lg'
                 >
-                  <svg className='w-4 h-4 sm:w-5 sm:h-5' fill='currentColor' viewBox='0 0 24 24'>
+                  <svg
+                    className='w-4 h-4 sm:w-5 sm:h-5'
+                    fill='currentColor'
+                    viewBox='0 0 24 24'
+                    aria-hidden='true'
+                  >
                     <path d='M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z' />
                   </svg>
-                </ShareButton>
+                </LocalShareButton>
               </div>
 
-              <CopyLinkButton
+              <LocalCopyLinkButton
                 text={`💝 "${phraseOfDay?.quote}"\n\n— ${phraseOfDay?.author}\n\nEncontre mais inspirações no Poder Rosa! 🌹✨`}
                 className='p-3 bg-gray-500 hover:bg-gray-600 text-white rounded-xl transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg'
               >
                 <LinkIcon className='w-5 h-5' />
-              </CopyLinkButton>
+              </LocalCopyLinkButton>
             </div>
           </div>
 
@@ -729,10 +799,10 @@ export default function Home() {
             <div className='absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-custom-start to-custom-primary rounded-l-xl'></div>
             <div className='ml-6'>
               <p className='text-xl text-custom-start leading-relaxed mb-4 font-medium italic'>
-                "{phraseOfDay?.quote}"
+                "{phraseOfDay?.quote || 'Carregando mensagem inspiradora...'}"
               </p>
               <cite className='text-custom-primary font-semibold block text-right'>
-                — {phraseOfDay?.author}
+                — {phraseOfDay?.author || 'Autor desconhecido'}
               </cite>
             </div>
             <SparklesIcon className='absolute top-4 right-4 w-6 h-6 text-custom-primary/30' />

@@ -140,11 +140,14 @@ export default function CardOfDay() {
         </div>
       </div>
 
-      <AddNoteModal
-        isOpen={isAddNoteOpen}
-        onClose={() => setIsAddNoteOpen(false)}
-        defaultTitle={cards[0]?.title ? `Carta do Dia: ${cards[0]?.title}` : ''}
-      />
+      {/* Modal otimizado: renderiza apenas quando aberto, fora do fluxo principal */}
+      {isAddNoteOpen && (
+        <AddNoteModal
+          isOpen={isAddNoteOpen}
+          onClose={() => setIsAddNoteOpen(false)}
+          defaultTitle={cards[0]?.title ? `Carta do Dia: ${cards[0]?.title}` : ''}
+        />
+      )}
     </div>
   );
 }

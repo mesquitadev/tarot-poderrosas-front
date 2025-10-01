@@ -48,7 +48,7 @@ export default function ThreeCards() {
               </h1>
             </div>
             <p className='text-gray-600 text-left'>
-              Três cartas sagradas revelam sua jornada: passado, presente e futuro em harmonia.
+              Três cartas sagradas revelam sua jornada: passado, presente e futuro.
             </p>
           </div>
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogFooter } from '@/components/ui/dialog';
 
 interface VideoModalProps {
   isOpen: boolean;
@@ -7,43 +8,32 @@ interface VideoModalProps {
 }
 
 const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose, videoUrl }) => {
-  if (!isOpen) return null;
-
   return (
-    <div
-      className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center'
-      onClick={onClose}
-      role='button'
-      tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && onClose()}
-    >
-      <div
-        className='bg-white p-4 rounded-lg shadow-lg w-11/12 md:w-1/2'
-        onClick={(e) => e.stopPropagation()}
-        role='button'
-        tabIndex={0}
-        onKeyDown={(e) => e.key === 'Enter' && e.stopPropagation()}
-      >
-        <div className='aspect-w-16 aspect-h-9'>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className='max-w-2xl p-0 bg-gradient-to-br from-white via-purple-50 to-pink-50 rounded-2xl shadow-2xl border border-purple-100/50 mx-4'>
+        <DialogHeader className='p-6 pb-0'>
+          <h2 className='text-2xl font-bold text-custom-primary'>Assista ao vídeo</h2>
+        </DialogHeader>
+        <div className='aspect-video w-full flex items-center justify-center bg-black/5'>
           <iframe
-            id='panda-5a76d6d0-eaa9-4cbc-a0c1-34dbb150937f'
+            id='video-player'
             src={videoUrl}
-            className='border:none;'
-            allow='accelerometer;gyroscope;autoplay;encrypted-media'
+            allow='accelerometer; gyroscope; autoplay; encrypted-media'
             allowFullScreen
-            width='100%'
-            height='500px'
             title='Video Player'
+            className='w-full h-full rounded-xl border-none shadow-lg mx-5'
           ></iframe>
         </div>
-        <div className='border-t border-gray-300 w-full my-2'></div>
-        <div className='flex justify-end mt-1'>
-          <button onClick={onClose} className='bg-primary p-2 rounded-md  text-white text-sm'>
+        <DialogFooter className='p-6 pt-4 flex justify-end'>
+          <button
+            onClick={onClose}
+            className='bg-custom-primary hover:bg-custom-start text-white px-5 py-2 rounded-lg text-sm font-semibold shadow-md transition-colors'
+          >
             Fechar
           </button>
-        </div>
-      </div>
-    </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 

@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import Cookies from 'js-cookie';
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
+import { Sheet, SheetContent, SheetFooter, SheetHeader } from '@/components/ui/sheet';
 import { tw } from '@/utils/tw';
 
 import logo from '../../assets/PoderRosa_logo_Branca.svg';
@@ -36,10 +37,6 @@ const SidebarLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
       icon: FaEdit,
       label: 'Minhas Anotações',
       startsWith: '/minhas-anotacoes',
-      // submenu: [
-      //   { to: '/minhas-anotacoes/nova', label: 'Nova Anotação', icon: FaPlus },
-      //   { to: '/minhas-anotacoes/lista', label: 'Lista de Anotações', icon: FaList },
-      // ],
     },
   ];
 
@@ -91,34 +88,15 @@ const SidebarLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
           </button>
         </footer>
       </div>
-      {/* Sidebar mobile - drawer */}
-      <div
-        className={tw(
-          'fixed z-50 inset-0 flex md:hidden',
-          openMobileMenu ? 'visible' : 'invisible pointer-events-none',
-        )}
-        style={{ background: openMobileMenu ? 'rgba(0,0,0,0.5)' : 'transparent' }}
-        onClick={() => setOpenMobileMenu(false)}
-      >
-        <div
-          className={tw(
-            'custom-gradient-sidebar text-white flex flex-col justify-between h-full w-64 transition-transform duration-300',
-            openMobileMenu ? 'translate-x-0' : '-translate-x-full',
-          )}
-          onClick={(e) => e.stopPropagation()}
+      {/* Sidebar mobile - Sheet do shadcn/ui */}
+      <Sheet open={openMobileMenu} onOpenChange={setOpenMobileMenu}>
+        <SheetContent
+          side='left'
+          className='p-0 custom-gradient-sidebar text-white w-64 flex flex-col justify-between h-full md:hidden'
         >
-          <div className='flex items-center justify-between px-4 pt-4 pb-2'>
+          <SheetHeader className='flex items-center justify-between px-4 pt-4 pb-2'>
             <img src={logo} alt='PoderRosa Logo' className='w-32 h-auto' />
-            <button
-              onClick={() => setOpenMobileMenu(false)}
-              className={tw(
-                'text-white p-2 rounded-md hover:bg-white hover:text-custom-primary transition',
-              )}
-              aria-label='Fechar menu lateral'
-            >
-              <span className='text-2xl'>&times;</span>
-            </button>
-          </div>
+          </SheetHeader>
           <nav className='pt-4 flex-1'>
             {links.map((link) => (
               <Link
@@ -141,7 +119,7 @@ const SidebarLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
               </Link>
             ))}
           </nav>
-          <footer className='p-4'>
+          <SheetFooter className='p-4'>
             <button
               onClick={handleSignOut}
               className={tw(
@@ -151,9 +129,9 @@ const SidebarLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
               <FaSignOutAlt className={tw('mr-2')} size={24} />
               Sair da plataforma
             </button>
-          </footer>
-        </div>
-      </div>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
       {/* Main Content */}
       <div className={tw('flex-1 transition-all duration-500', 'ml-0 md:ml-64', 'overflow-y-auto')}>
         {/* Top Bar */}

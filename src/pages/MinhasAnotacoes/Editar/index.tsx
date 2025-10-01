@@ -164,17 +164,6 @@ const EditarAnotacao = () => {
     categories.find((cat) => cat.id === selectedCategory) || categories[0];
   const IconComponent = selectedCategoryData.icon;
 
-  const quillModules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      ['blockquote', 'code-block'],
-      ['link'],
-      ['clean'],
-    ],
-  };
-
   if (loading) {
     return (
       <div className='min-h-screen bg-gradient-to-br from-purple-50/50 via-white to-pink-50/30'>
@@ -449,7 +438,7 @@ const EditarAnotacao = () => {
               ) : (
                 <div className='relative'>
                   {/* Estilos customizados para o editor de edição */}
-                  <style jsx global>{`
+                  <style jsx>{`
                     .custom-quill-edit .ql-toolbar {
                       background: linear-gradient(135deg, #f8f9ff 0%, #f3f4f6 100%);
                       border: none !important;

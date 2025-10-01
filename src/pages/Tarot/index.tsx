@@ -129,7 +129,7 @@ export default function Tarot() {
       <VideoModal
         isOpen={isModalOpen}
         onClose={closeModal}
-        videoUrl='https://player-vz-88b4be7d-dd2.tv.pandavideo.com.br/embed/?v=5a76d6d0-eaa9-4cbc-a0c1-34dbb150937f'
+        videoUrl='https://player.cloudinary.com/embed/?cloud_name=dtsqw41vs&public_id=DINAMICA_DO_TARO_zteiyk&profile=cld-default'
       />
     </>
   );
