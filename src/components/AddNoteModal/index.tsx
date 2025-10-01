@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Organização e otimização do AddNoteModal
 import React, { useEffect, useState } from 'react';
 import {

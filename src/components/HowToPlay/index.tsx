@@ -1,12 +1,6 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogClose } from '@/components/ui/dialog';
-import {
-  SparklesIcon,
-  LightBulbIcon,
-  EyeIcon,
-  HeartIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline';
+import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
+import { EyeIcon, HeartIcon, LightBulbIcon, SparklesIcon } from '@heroicons/react/24/outline';
 
 const steps = [
   {

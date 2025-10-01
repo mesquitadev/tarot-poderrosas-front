@@ -1,6 +1,7 @@
 import { apiSlice } from './apiSlice';
 
 export interface Mission {
+  day?: number;
   id: string;
   title: string;
   description: string;
