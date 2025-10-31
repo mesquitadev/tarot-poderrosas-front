@@ -3,11 +3,13 @@ import { useState } from 'react';
 import background from '../../assets/Login.svg';
 import logo from '../../assets/PoderRosa_logo_Branca.svg';
 import { useLoading } from '@/hooks/useLoading';
-// import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
+import api from '@/services';
 
 interface FormData {
-  nome: string;
-  sobrenome: string;
+  fullName: string; // nome completo
+  cpf: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -21,7 +23,7 @@ const SignUp = () => {
     watch,
     formState: { errors, isSubmitting },
   } = useForm<FormData>();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const { loading } = useLoading();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -29,14 +31,19 @@ const SignUp = () => {
   const password = watch('password');
 
   const onSubmit = async (data: FormData) => {
-    // try {
-    //   const { confirmPassword, acceptTerms, ...signUpData } = data;
-    //   await signUp(signUpData);
-    //   navigate('/inicio');
-    // } catch (error) {
-    //   console.error('Signup error:', error);
-    // }
-    console.log(data);
+    try {
+      const { confirmPassword, acceptTerms, ...rest } = data;
+      const payload = {
+        fullName: rest.fullName.trim(),
+        cpf: rest.cpf,
+        email: rest.email,
+        password: rest.password,
+      };
+      await api.post('/auth/register', payload);
+      navigate('/');
+    } catch (error) {
+      console.error('Signup error:', error);
+    }
   };
 
   return (
@@ -84,77 +91,70 @@ const SignUp = () => {
           {/* Formulário */}
           <div className='bg-white rounded-2xl shadow-xl border border-gray-100 p-8 transform transition-all duration-300 hover:shadow-2xl'>
             <form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
-              {/* Nome e Sobrenome */}
-              <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-                <div className='space-y-2'>
-                  <label className='block text-gray-700 text-sm font-semibold' htmlFor='nome'>
-                    Nome
-                  </label>
-                  <input
-                    className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 transition-all duration-200 focus:bg-white focus:outline-none ${
-                      errors.nome
-                        ? 'border-red-400 focus:border-red-500'
-                        : 'border-gray-200 focus:border-custom-start'
-                    }`}
-                    id='nome'
-                    type='text'
-                    placeholder='Seu nome'
-                    {...register('nome', {
-                      required: 'Nome é obrigatório',
-                      minLength: {
-                        value: 2,
-                        message: 'Nome deve ter pelo menos 2 caracteres',
-                      },
-                    })}
-                  />
-                  {errors.nome && (
-                    <p className='text-red-500 text-xs flex items-center'>
-                      <svg className='w-3 h-3 mr-1' fill='currentColor' viewBox='0 0 20 20'>
-                        <path
-                          fillRule='evenodd'
-                          d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z'
-                          clipRule='evenodd'
-                        />
-                      </svg>
-                      {errors.nome.message}
-                    </p>
-                  )}
-                </div>
+              {/* Nome Completo */}
+              <div className='space-y-2'>
+                <label className='block text-gray-700 text-sm font-semibold' htmlFor='fullName'>
+                  Nome Completo
+                </label>
+                <input
+                  className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 transition-all duration-200 focus:bg-white focus:outline-none ${
+                    errors.fullName
+                      ? 'border-red-400 focus:border-red-500'
+                      : 'border-gray-200 focus:border-custom-start'
+                  }`}
+                  id='fullName'
+                  type='text'
+                  placeholder='Seu nome completo'
+                  {...register('fullName', {
+                    required: 'Nome completo é obrigatório',
+                    minLength: { value: 3, message: 'Informe ao menos 3 caracteres' },
+                  })}
+                />
+                {errors.fullName && (
+                  <p className='text-red-500 text-xs flex items-center'>
+                    <svg className='w-3 h-3 mr-1' fill='currentColor' viewBox='0 0 20 20'>
+                      <path
+                        fillRule='evenodd'
+                        d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z'
+                        clipRule='evenodd'
+                      />
+                    </svg>
+                    {errors.fullName.message}
+                  </p>
+                )}
+              </div>
 
-                <div className='space-y-2'>
-                  <label className='block text-gray-700 text-sm font-semibold' htmlFor='sobrenome'>
-                    Sobrenome
-                  </label>
-                  <input
-                    className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 transition-all duration-200 focus:bg-white focus:outline-none ${
-                      errors.sobrenome
-                        ? 'border-red-400 focus:border-red-500'
-                        : 'border-gray-200 focus:border-custom-start'
-                    }`}
-                    id='sobrenome'
-                    type='text'
-                    placeholder='Seu sobrenome'
-                    {...register('sobrenome', {
-                      required: 'Sobrenome é obrigatório',
-                      minLength: {
-                        value: 2,
-                        message: 'Sobrenome deve ter pelo menos 2 caracteres',
-                      },
-                    })}
-                  />
-                  {errors.sobrenome && (
-                    <p className='text-red-500 text-xs flex items-center'>
-                      <svg className='w-3 h-3 mr-1' fill='currentColor' viewBox='0 0 20 20'>
-                        <path
-                          fillRule='evenodd'
-                          d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z'
-                          clipRule='evenodd'
-                        />
-                      </svg>
-                      {errors.sobrenome.message}
-                    </p>
-                  )}
-                </div>
+              {/* CPF */}
+              <div className='space-y-2'>
+                <label className='block text-gray-700 text-sm font-semibold' htmlFor='cpf'>
+                  CPF
+                </label>
+                <input
+                  className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 transition-all duration-200 focus:bg-white focus:outline-none ${
+                    errors.cpf
+                      ? 'border-red-400 focus:border-red-500'
+                      : 'border-gray-200 focus:border-custom-start'
+                  }`}
+                  id='cpf'
+                  type='text'
+                  placeholder='Seu CPF'
+                  {...register('cpf', {
+                    required: 'CPF é obrigatório',
+                    minLength: { value: 11, message: 'CPF inválido' },
+                  })}
+                />
+                {errors.cpf && (
+                  <p className='text-red-500 text-xs flex items-center'>
+                    <svg className='w-3 h-3 mr-1' fill='currentColor' viewBox='0 0 20 20'>
+                      <path
+                        fillRule='evenodd'
+                        d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z'
+                        clipRule='evenodd'
+                      />
+                    </svg>
+                    {errors.cpf.message}
+                  </p>
+                )}
               </div>
 
               {/* Email */}
@@ -474,12 +474,12 @@ const SignUp = () => {
               </div>
               <p className='text-gray-600 text-sm'>
                 Já tem uma conta?{' '}
-                <a
-                  href='/login'
+                <Link
+                  to='/'
                   className='text-custom-start hover:text-custom-primary font-medium transition-colors'
                 >
                   Entrar aqui
-                </a>
+                </Link>
               </p>
             </div>
           </div>

@@ -1,4 +1,5 @@
-export { default as SignUp } from './SignIn';
+export { default as SignUp } from './SignUp';
+export { default as SignIn } from './SignIn';
 export { default as MinhasAnotacoes } from './MinhasAnotacoes';
 export { default as NovaAnotacao } from './MinhasAnotacoes/Nova';
 export { default as EditarAnotacao } from './MinhasAnotacoes/Editar';

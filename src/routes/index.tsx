@@ -12,19 +12,19 @@ import {
   NotFound,
   NovaAnotacao,
   SignUp,
+  SignIn,
   Tarot,
   ThreeCards,
 } from '@/pages';
 import { PublicRoute, PrivateRoute } from './Route';
-import SignIn from '@/pages/SignIn';
 
 function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<PublicRoute />}>
-          <Route path='/' element={<SignUp />} />
-          <Route path='/cadastro' element={<SignIn />} />
+          <Route path='/' element={<SignIn />} />
+          <Route path='/cadastro' element={<SignUp />} />
           <Route path='/ativar-conta' element={<ActivateAccount />} />
           <Route path='/ativar-conta/:token' element={<ActivateAccount />} />
         </Route>
