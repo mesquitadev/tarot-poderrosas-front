@@ -29,7 +29,7 @@ const SidebarLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   };
 
   const links = [
-    { to: '/inicio', icon: FaHome, label: 'Início', startsWith: '/inicio' },
+    { to: '/', icon: FaHome, label: 'Início', startsWith: '/' },
     { to: '/tarot', icon: FaStar, label: 'Tarot', startsWith: '/tarot' },
     {
       to: '/desafio-do-dia',
@@ -65,23 +65,29 @@ const SidebarLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
           <img src={logo} alt='PoderRosa Logo' className='w-32 h-auto' />
         </div>
         <nav className='pt-4 flex-1'>
-          {links.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              aria-current={location.pathname.startsWith(link.startsWith) ? 'page' : undefined}
-              className={tw(
-                'font-merryweather font-light relative py-2.5 px-4 mb-1 transition duration-200 flex items-center hover:bg-custom-primary',
-                location.pathname.startsWith(link.startsWith) ? 'bg-custom-primary font-bold' : '',
-              )}
-            >
-              <link.icon className={tw('mr-2')} />
-              {link.label}
-              {location.pathname.startsWith(link.startsWith) && (
-                <span className='absolute top-0 right-0 w-1 h-full bg-yellow-500'></span>
-              )}
-            </Link>
-          ))}
+          {links.map((link) => {
+            const isActive =
+              link.to === '/'
+                ? location.pathname === '/'
+                : location.pathname.startsWith(link.startsWith);
+            return (
+              <Link
+                key={link.to}
+                to={link.to}
+                aria-current={isActive ? 'page' : undefined}
+                className={tw(
+                  'font-merryweather font-light relative py-2.5 px-4 mb-1 transition duration-200 flex items-center hover:bg-custom-primary',
+                  isActive ? 'bg-custom-primary font-bold' : '',
+                )}
+              >
+                <link.icon className={tw('mr-2')} />
+                {link.label}
+                {isActive && (
+                  <span className='absolute top-0 right-0 w-1 h-full bg-yellow-500'></span>
+                )}
+              </Link>
+            );
+          })}
         </nav>
         <footer className='p-4'>
           {isAuthenticated ? (
@@ -109,26 +115,30 @@ const SidebarLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
             <img src={logo} alt='PoderRosa Logo' className='w-32 h-auto' />
           </SheetHeader>
           <nav className='pt-4 flex-1'>
-            {links.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                aria-current={location.pathname.startsWith(link.startsWith) ? 'page' : undefined}
-                className={tw(
-                  'font-merryweather font-light relative py-2.5 px-4 mb-1 transition duration-200 flex items-center hover:bg-custom-primary',
-                  location.pathname.startsWith(link.startsWith)
-                    ? 'bg-custom-primary font-bold'
-                    : '',
-                )}
-                onClick={() => setOpenMobileMenu(false)}
-              >
-                <link.icon className={tw('mr-2')} />
-                {link.label}
-                {location.pathname.startsWith(link.startsWith) && (
-                  <span className='absolute top-0 right-0 w-1 h-full bg-yellow-500'></span>
-                )}
-              </Link>
-            ))}
+            {links.map((link) => {
+              const isActive =
+                link.to === '/'
+                  ? location.pathname === '/'
+                  : location.pathname.startsWith(link.startsWith);
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  aria-current={isActive ? 'page' : undefined}
+                  className={tw(
+                    'font-merryweather font-light relative py-2.5 px-4 mb-1 transition duration-200 flex items-center hover:bg-custom-primary',
+                    isActive ? 'bg-custom-primary font-bold' : '',
+                  )}
+                  onClick={() => setOpenMobileMenu(false)}
+                >
+                  <link.icon className={tw('mr-2')} />
+                  {link.label}
+                  {isActive && (
+                    <span className='absolute top-0 right-0 w-1 h-full bg-yellow-500'></span>
+                  )}
+                </Link>
+              );
+            })}
           </nav>
           <SheetFooter className='p-4'>
             {isAuthenticated ? (

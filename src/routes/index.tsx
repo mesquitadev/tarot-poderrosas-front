@@ -22,16 +22,21 @@ function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public routes */}
         <Route element={<PublicRoute />}>
-          <Route path='/' element={<SignIn />} />
+          {/* Login moved to /login */}
+          <Route path='/login' element={<SignIn />} />
           <Route path='/cadastro' element={<SignUp />} />
           <Route path='/ativar-conta' element={<ActivateAccount />} />
           <Route path='/ativar-conta/:token' element={<ActivateAccount />} />
         </Route>
 
-        <Route path='/inicio' element={<PrivateRoute />}>
+        {/* Private routes */}
+        {/* Home is now the root path */}
+        <Route path='/' element={<PrivateRoute />}>
           <Route index element={<Home />} />
         </Route>
+
         <Route path='/tarot' element={<PrivateRoute />}>
           <Route index element={<Tarot />} />
           <Route path='carta-do-dia' element={<CardOfDay />} />

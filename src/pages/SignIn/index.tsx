@@ -23,7 +23,7 @@ const Login = () => {
   const onSubmit = async (data: FormData) => {
     try {
       await signIn(data);
-      navigate('/inicio');
+      navigate('/');
     } catch (error) {
       console.error('Login error:', error);
     }

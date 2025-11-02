@@ -8,7 +8,7 @@ const PrivateRoute: React.FC = () => {
   const { token } = useAuth();
   const isAuthenticated = Boolean(token);
   const location = useLocation();
-  const allowGuestOnHome = location.pathname === '/inicio' || location.pathname === '/inicio/';
+  const allowGuestOnHome = location.pathname === '/' || location.pathname === '/';
 
   return <Layout>{isAuthenticated || allowGuestOnHome ? <Outlet /> : <GuestPrompt />}</Layout>;
 };
