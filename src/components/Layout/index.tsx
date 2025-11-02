@@ -15,9 +15,14 @@ import PetalsRain from '../PetalsRain';
 const SidebarLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [openSignOutModal, setOpenSignOutModal] = useState(false);
   const [openMobileMenu, setOpenMobileMenu] = useState(false);
-  const { signOut } = useAuth();
+  const { signOut, token } = useAuth();
   const location = useLocation();
-  const user = Cookies.get('poderrosas.user') ? JSON.parse(Cookies.get('poderrosas.user')!) : null;
+  const cookieUser = Cookies.get('poderrosas.user')
+    ? JSON.parse(Cookies.get('poderrosas.user')!)
+    : null;
+
+  const isAuthenticated = Boolean(token);
+  const displayName = cookieUser?.fullName || (isAuthenticated ? 'Usuário' : 'Convidado');
 
   const handleSignOut = () => {
     setOpenSignOutModal((state) => !state);
@@ -79,13 +84,19 @@ const SidebarLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
           ))}
         </nav>
         <footer className='p-4'>
-          <button
-            onClick={handleSignOut}
-            className={tw('text-white py-2 px-4 hover:bg-custom-primary flex items-center w-full')}
-          >
-            <FaSignOutAlt className={tw('mr-2')} size={24} />
-            Sair da plataforma
-          </button>
+          {isAuthenticated ? (
+            <button
+              onClick={handleSignOut}
+              className={tw(
+                'text-white py-2 px-4 hover:bg-custom-primary flex items-center w-full',
+              )}
+            >
+              <FaSignOutAlt className={tw('mr-2')} size={24} />
+              Sair da plataforma
+            </button>
+          ) : (
+            <div className='text-sm opacity-80 px-1 pb-2'>Acesse mais conteúdos fazendo login.</div>
+          )}
         </footer>
       </div>
       {/* Sidebar mobile - Sheet do shadcn/ui */}
@@ -120,15 +131,21 @@ const SidebarLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
             ))}
           </nav>
           <SheetFooter className='p-4'>
-            <button
-              onClick={handleSignOut}
-              className={tw(
-                'text-white py-2 px-4 hover:bg-custom-primary flex items-center w-full',
-              )}
-            >
-              <FaSignOutAlt className={tw('mr-2')} size={24} />
-              Sair da plataforma
-            </button>
+            {isAuthenticated ? (
+              <button
+                onClick={handleSignOut}
+                className={tw(
+                  'text-white py-2 px-4 hover:bg-custom-primary flex items-center w-full',
+                )}
+              >
+                <FaSignOutAlt className={tw('mr-2')} size={24} />
+                Sair da plataforma
+              </button>
+            ) : (
+              <div className='text-sm opacity-80 px-1 pb-2'>
+                Acesse mais conteúdos fazendo login.
+              </div>
+            )}
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -157,11 +174,12 @@ const SidebarLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
           </div>
           <div className={tw('flex items-center')}>
             <span className={tw('text-sm')}>
-              {getGreeting()}, {user ? user.fullName : 'Usuário'}
+              {getGreeting()}, {displayName}
             </span>
           </div>
         </div>
-        <div className='p-5 text-2xl font-bold'>{children}</div>
+        {/* Conteúdo principal */}
+        <div className='p-5 pt-2 text-2xl font-bold'>{children}</div>
       </div>
       {/* Modal de sair permanece igual */}
       <Dialog open={openSignOutModal} onClose={handleSignOut} className='relative z-10'>

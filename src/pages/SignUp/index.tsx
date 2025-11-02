@@ -33,7 +33,7 @@ const SignUp = () => {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const { confirmPassword, acceptTerms, ...rest } = data;
+      const { confirmPassword: _confirmPassword, acceptTerms: _acceptTerms, ...rest } = data;
       const payload = {
         fullName: rest.fullName.trim(),
         cpf: rest.cpf,

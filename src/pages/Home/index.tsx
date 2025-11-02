@@ -31,6 +31,7 @@ import {
   SparklesIcon,
   StarIcon,
 } from '@heroicons/react/24/outline';
+import { useAuth } from '@/hooks/useAuth';
 
 const WeekDays = () => {
   const daysOfWeek = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
@@ -313,12 +314,121 @@ LocalCopyLinkButton.displayName = 'LocalCopyLinkButton';
 export default function Home() {
   const navigate = useNavigate();
   const [phraseOfDay] = useState<any>(getPhraseOfDay());
+  const { token } = useAuth();
+  const isAuthenticated = Boolean(token);
 
   const {
     data: annotations = [],
     isLoading: annotationsLoading,
     error: annotationsError,
-  } = useGetDiaryEntriesQuery();
+  } = useGetDiaryEntriesQuery(undefined as any, { skip: !isAuthenticated } as any);
+
+  // Quando não autenticado, mostrar seção pública simples
+  if (!isAuthenticated) {
+    return (
+      <div className='space-y-10 pb-10'>
+        {/* Hero público */}
+        <div className='relative overflow-hidden rounded-2xl shadow-xl'>
+          <img src={banner} alt='Banner PoderRosa' className='w-full h-64 md:h-80 object-cover' />
+          <div className='absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent'></div>
+          <div className='absolute inset-0 p-6 md:p-10 flex flex-col justify-end'>
+            <div className='max-w-2xl text-white'>
+              <div className='flex items-center gap-2 mb-2'>
+                <SparklesIcon className='w-6 h-6 text-yellow-300' />
+                <span className='text-sm uppercase tracking-wide text-white/90'>
+                  Sugestão do Dia
+                </span>
+              </div>
+              <h1 className='text-2xl md:text-3xl font-bold leading-snug'>
+                {phraseOfDay?.title || 'Inspire-se hoje'}
+              </h1>
+              {phraseOfDay?.phrase && (
+                <p className='mt-2 text-white/90 text-sm md:text-base'>“{phraseOfDay.phrase}”</p>
+              )}
+              <div className='mt-5 flex flex-wrap gap-3'>
+                <button
+                  onClick={() => navigate('/cadastro')}
+                  className='inline-flex items-center gap-2 bg-gradient-to-r from-custom-start to-custom-primary text-white px-5 py-3 rounded-xl hover:opacity-95 transition'
+                >
+                  Crie sua conta
+                  <ArrowRightIcon className='w-4 h-4' />
+                </button>
+                <button
+                  onClick={() => navigate('/')}
+                  className='inline-flex items-center gap-2 bg-white/90 text-custom-primary px-5 py-3 rounded-xl hover:bg-white transition'
+                >
+                  Fazer login
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Destaques públicos */}
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+          <div className='bg-white rounded-2xl p-6 shadow border'>
+            <div className='flex items-center gap-3 mb-3'>
+              <LightBulbIcon className='w-6 h-6 text-custom-primary' />
+              <h3 className='text-lg font-semibold text-custom-primary'>Carta do Dia</h3>
+            </div>
+            <p className='text-gray-600 text-sm'>
+              Encontre inspiração diária e conecte-se com sua intuição.
+            </p>
+          </div>
+          <div className='bg-white rounded-2xl p-6 shadow border'>
+            <div className='flex items-center gap-3 mb-3'>
+              <BookOpenIcon className='w-6 h-6 text-purple-600' />
+              <h3 className='text-lg font-semibold text-purple-700'>Três Cartas</h3>
+            </div>
+            <p className='text-gray-600 text-sm'>
+              Descubra perspectivas sobre passado, presente e futuro.
+            </p>
+          </div>
+          <div className='bg-white rounded-2xl p-6 shadow border'>
+            <div className='flex items-center gap-3 mb-3'>
+              <StarIcon className='w-6 h-6 text-rose-500' />
+              <h3 className='text-lg font-semibold text-rose-600'>Cinco Cartas</h3>
+            </div>
+            <p className='text-gray-600 text-sm'>
+              Explore conexões e caminhos com uma leitura mais profunda.
+            </p>
+          </div>
+        </div>
+
+        {/* CTA adicional */}
+        <div className='bg-gradient-to-r from-custom-start to-custom-primary rounded-2xl p-6 text-white shadow'>
+          <div className='flex flex-col md:flex-row items-center justify-between gap-4'>
+            <div>
+              <h2 className='text-xl font-semibold'>Pronta para começar sua jornada?</h2>
+              <p className='text-white/90 text-sm mt-1'>
+                Crie sua conta gratuitamente e desbloqueie todos os recursos.
+              </p>
+            </div>
+            <div className='flex gap-3'>
+              <button
+                onClick={() => navigate('/cadastro')}
+                className='bg-white text-custom-primary px-5 py-3 rounded-xl font-semibold hover:opacity-95 transition'
+              >
+                Criar conta
+              </button>
+              <button
+                onClick={() => navigate('/')}
+                className='border border-white/70 text-white px-5 py-3 rounded-xl font-semibold hover:bg-white/10 transition'
+              >
+                Fazer login
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Conteúdo autenticado (original)
+  const { data: missions = [] } = useGetMissionsQuery(
+    undefined as any,
+    { skip: !isAuthenticated } as any,
+  );
 
   const reflexaoLabel = annotations.length === 1 ? 'reflexão' : 'reflexões';
   const annotationsThisWeekCount = annotations.filter((a) => {

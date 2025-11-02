@@ -1,24 +1,20 @@
 import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import Layout from '@/components/Layout';
+import GuestPrompt from '@/components/GuestPrompt';
 
 const PrivateRoute: React.FC = () => {
   const { token } = useAuth();
+  const isAuthenticated = Boolean(token);
+  const location = useLocation();
+  const allowGuestOnHome = location.pathname === '/inicio' || location.pathname === '/inicio/';
 
-  return token ? (
-    <Layout>
-      <Outlet />
-    </Layout>
-  ) : (
-    <Navigate to='/' />
-  );
+  return <Layout>{isAuthenticated || allowGuestOnHome ? <Outlet /> : <GuestPrompt />}</Layout>;
 };
 
 const PublicRoute: React.FC = () => {
-  const { token } = useAuth();
-
-  return token ? <Navigate to='/inicio' /> : <Outlet />;
+  return <Outlet />;
 };
 
 export { PrivateRoute, PublicRoute };
