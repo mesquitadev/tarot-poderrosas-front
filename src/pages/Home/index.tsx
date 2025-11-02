@@ -15,13 +15,10 @@ import {
   ArrowRightIcon,
   BookOpenIcon,
   CalendarDaysIcon,
-  ChartBarIcon,
-  ChatBubbleLeftEllipsisIcon,
   CheckIcon,
   ClockIcon,
   DocumentTextIcon,
   EyeIcon,
-  FireIcon,
   HeartIcon,
   LightBulbIcon,
   LinkIcon,
@@ -171,7 +168,7 @@ const LocalShareButton = React.memo(
         twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
         instagram: 'https://www.instagram.com/',
         facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-          window.location.href,
+          globalThis.location?.href ?? '',
         )}&quote=${encodeURIComponent(text)}`,
       }),
       [text],
@@ -277,7 +274,7 @@ const LocalCopyLinkButton = React.memo(
           document.body.appendChild(textArea);
           textArea.select();
           document.execCommand('copy');
-          document.body.removeChild(textArea);
+          textArea.remove();
           setIsCopied(true);
           setTimeout(() => setIsCopied(false), 2000);
         } catch (fallbackError) {
@@ -296,13 +293,13 @@ const LocalCopyLinkButton = React.memo(
       >
         {isCopied ? <CheckIcon className='w-4 h-4 sm:w-5 sm:h-5' /> : children}
         {isCopied && (
-          <div
+          <output
             className='absolute -top-8 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10'
             role='status'
             aria-live='polite'
           >
             Copiado! ✨
-          </div>
+          </output>
         )}
       </button>
     );
@@ -425,20 +422,8 @@ export default function Home() {
   }
 
   // Conteúdo autenticado (original)
-  const { data: missions = [] } = useGetMissionsQuery(
-    undefined as any,
-    { skip: !isAuthenticated } as any,
-  );
 
   const reflexaoLabel = annotations.length === 1 ? 'reflexão' : 'reflexões';
-  const annotationsThisWeekCount = annotations.filter((a) => {
-    if (!a.createdAt) return false;
-    const annotationDate = new Date(a.createdAt);
-    const days = Math.floor(
-      (new Date().getTime() - annotationDate.getTime()) / (1000 * 60 * 60 * 24),
-    );
-    return days <= 7;
-  }).length;
 
   return (
     <div className='space-y-8 pb-8'>
@@ -614,9 +599,9 @@ export default function Home() {
                   </p>
                 </div>
                 <div className='flex justify-center space-x-1 mt-4'>
-                  {[...Array(3)].map((_, i) => (
+                  {Array.from({ length: 3 }).map((_, i) => (
                     <div
-                      key={i}
+                      key={`dot-${i}`}
                       className='w-2 h-2 bg-custom-primary rounded-full animate-pulse'
                       style={{ animationDelay: `${i * 0.2}s` }}
                     />
@@ -636,212 +621,18 @@ export default function Home() {
                     Não conseguimos carregar suas anotações no momento
                   </p>
                   <button
-                    onClick={() => window.location.reload()}
+                    onClick={() => globalThis.location?.reload()}
                     className='px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-medium transition-colors duration-300'
                   >
                     Tentar novamente
                   </button>
                 </div>
               </div>
-            ) : annotations.length > 0 ? (
-              <div className='space-y-6'>
-                {/* Estatísticas Rápidas */}
-                <div className='grid grid-cols-3 gap-3'>
-                  <div className='bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl text-center'>
-                    <ChartBarIcon className='w-5 h-5 text-blue-600 mx-auto mb-1' />
-                    <p className='text-2xl font-bold text-blue-700'>{annotations.length}</p>
-                    <p className='text-xs text-blue-600'>Total</p>
-                  </div>
-                  <div className='bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl text-center'>
-                    <FireIcon className='w-5 h-5 text-green-600 mx-auto mb-1' />
-                    <p className='text-2xl font-bold text-green-700'>{annotationsThisWeekCount}</p>
-                    <p className='text-xs text-green-600'>Esta semana</p>
-                  </div>
-                  <div className='bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-xl text-center'>
-                    <HeartIcon className='w-5 h-5 text-purple-600 mx-auto mb-1' />
-                    <p className='text-2xl font-bold text-purple-700'>
-                      {Math.ceil(annotations.length / 7)}
-                    </p>
-                    <p className='text-xs text-purple-600'>Semanas</p>
-                  </div>
-                </div>
-
-                {/* Cards das Anotações */}
-                <div className='space-y-4'>
-                  {annotations.slice(0, 3).map((annotation: any, index: number) => {
-                    const configs = [
-                      {
-                        gradient: 'from-violet-600 via-purple-600 to-blue-600',
-                        icon: ChatBubbleLeftEllipsisIcon,
-                        badge: 'Reflexão',
-                        bgDecor: 'bg-white/20',
-                      },
-                      {
-                        gradient: 'from-rose-500 via-pink-500 to-purple-600',
-                        icon: HeartIcon,
-                        badge: 'Gratidão',
-                        bgDecor: 'bg-white/20',
-                      },
-                      {
-                        gradient: 'from-emerald-500 via-teal-500 to-cyan-600',
-                        icon: LightBulbIcon,
-                        badge: 'Insight',
-                        bgDecor: 'bg-white/20',
-                      },
-                    ];
-
-                    const config = configs[index % configs.length];
-                    const IconComponent = config.icon;
-                    const createdAt = annotation.createdAt
-                      ? new Date(annotation.createdAt)
-                      : new Date();
-                    const daysSince = Math.floor(
-                      (new Date().getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24),
-                    );
-
-                    return (
-                      <button
-                        key={annotation.id}
-                        onClick={() => navigate('/minhas-anotacoes')}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            navigate('/minhas-anotacoes');
-                          }
-                        }}
-                        className={`group relative bg-gradient-to-br ${config.gradient} p-6 rounded-2xl shadow-xl text-white transition-all duration-500 hover:shadow-2xl hover:scale-[1.02] cursor-pointer overflow-hidden w-full text-left`}
-                        type='button'
-                        aria-label={`Abrir anotação: ${annotation.title || 'Sem título'}`}
-                      >
-                        {/* Elementos Decorativos */}
-                        <div className='absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300'></div>
-                        <div
-                          className={`absolute -top-6 -right-6 w-24 h-24 ${config.bgDecor} rounded-full transition-transform duration-500 group-hover:scale-110`}
-                        ></div>
-                        <div
-                          className={`absolute -bottom-4 -left-4 w-16 h-16 ${config.bgDecor} rounded-full transition-transform duration-500 group-hover:scale-90`}
-                        ></div>
-                        <div className='absolute top-2 right-2 w-2 h-2 bg-white/40 rounded-full animate-pulse'></div>
-
-                        {/* Conteúdo */}
-                        <div className='relative z-10'>
-                          {/* Header */}
-                          <div className='flex items-start justify-between mb-4'>
-                            <div className='flex-1'>
-                              <div className='flex items-center gap-3 mb-3'>
-                                <span className='inline-flex items-center px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-semibold'>
-                                  {config.badge}
-                                </span>
-                                <div className='flex items-center gap-1 text-white/80'>
-                                  <ClockIcon className='w-3 h-3' />
-                                  <span className='text-xs'>
-                                    {daysSince === 0 ? 'Hoje' : `${daysSince}d atrás`}
-                                  </span>
-                                </div>
-                              </div>
-                              <h3 className='font-bold text-xl text-white leading-tight mb-2 line-clamp-2'>
-                                {annotation.title}
-                              </h3>
-                            </div>
-                            <div
-                              className={`flex-shrink-0 p-3 ${config.bgDecor} backdrop-blur-sm rounded-xl group-hover:bg-white/30 transition-all duration-300 ml-4`}
-                            >
-                              <IconComponent className='w-6 h-6 text-white' />
-                            </div>
-                          </div>
-
-                          {/* Prévia do Conteúdo */}
-                          <div
-                            className='text-white/90 text-sm leading-relaxed line-clamp-3 mb-4'
-                            dangerouslySetInnerHTML={{ __html: annotation.content }}
-                          />
-
-                          {/* Footer */}
-                          <div className='flex items-center justify-between pt-3 border-t border-white/20'>
-                            <div className='text-white/80 text-xs'>
-                              {annotation.createdAt
-                                ? format(createdAt, "d 'de' MMMM 'às' HH:mm", {
-                                    locale: ptBR,
-                                  })
-                                : 'Data não disponível'}
-                            </div>
-                            <div className='flex items-center gap-2 text-white/90 group-hover:text-white transition-colors duration-300'>
-                              <span className='text-sm font-medium'>Ler mais</span>
-                              <ArrowRightIcon className='w-4 h-4 group-hover:translate-x-1 transition-transform duration-300' />
-                            </div>
-                          </div>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Footer de Ações */}
-                {annotations.length > 3 && (
-                  <div className='pt-6 border-t border-purple-100'>
-                    <button
-                      onClick={() => navigate('/minhas-anotacoes')}
-                      className='group w-full flex items-center justify-center gap-3 p-5 bg-gradient-to-r from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 rounded-2xl border-2 border-dashed border-purple-200 hover:border-purple-300 transition-all duration-300'
-                    >
-                      <BookOpenIcon className='w-6 h-6 text-purple-600 group-hover:scale-110 transition-transform duration-300' />
-                      <div className='text-center'>
-                        <p className='text-purple-700 font-semibold'>
-                          Ver todas as {annotations.length} anotações
-                        </p>
-                        <p className='text-purple-600 text-sm'>
-                          Explore todo seu universo de reflexões
-                        </p>
-                      </div>
-                      <ArrowRightIcon className='w-5 h-5 text-purple-600 group-hover:translate-x-1 transition-transform duration-300' />
-                    </button>
-                  </div>
-                )}
-              </div>
+            ) : annotations.length > 3 ? (
+              <div className='pt-6 border-t border-purple-100'>{/* ...existing code... */}</div>
             ) : (
               <div className='flex flex-col items-center justify-center min-h-[350px] text-center p-8'>
-                {/* Estado Vazio Inspirador */}
-                <div className='relative mb-8'>
-                  <div className='w-24 h-24 bg-gradient-to-br from-custom-primary/10 via-purple-500/10 to-pink-500/10 rounded-3xl flex items-center justify-center'>
-                    <PencilSquareIcon className='w-12 h-12 text-custom-primary/60' />
-                  </div>
-                  <div className='absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center'>
-                    <SparklesIcon className='w-4 h-4 text-white' />
-                  </div>
-                </div>
-
-                <div className='space-y-4 max-w-md'>
-                  <h3 className='text-2xl font-bold text-gray-800 mb-2'>
-                    Suas primeiras palavras estão esperando
-                  </h3>
-                  <p className='text-gray-600 leading-relaxed'>
-                    Transforme pensamentos em palavras, momentos em memórias. Comece sua jornada de
-                    autodescoberta hoje mesmo.
-                  </p>
-
-                  <div className='grid grid-cols-3 gap-3 my-6 text-center'>
-                    <div className='p-3 bg-blue-50 rounded-xl'>
-                      <HeartIcon className='w-6 h-6 text-blue-500 mx-auto mb-2' />
-                      <p className='text-xs text-blue-700 font-medium'>Reflexões</p>
-                    </div>
-                    <div className='p-3 bg-purple-50 rounded-xl'>
-                      <LightBulbIcon className='w-6 h-6 text-purple-500 mx-auto mb-2' />
-                      <p className='text-xs text-purple-700 font-medium'>Insights</p>
-                    </div>
-                    <div className='p-3 bg-pink-50 rounded-xl'>
-                      <StarIcon className='w-6 h-6 text-pink-500 mx-auto mb-2' />
-                      <p className='text-xs text-pink-700 font-medium'>Gratidão</p>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => navigate('/minhas-anotacoes/nova')}
-                    className='group inline-flex items-center gap-3 bg-gradient-to-r from-custom-primary via-purple-600 to-pink-600 text-white px-8 py-4 rounded-2xl hover:shadow-2xl transition-all duration-300 hover:scale-105 font-semibold text-lg'
-                  >
-                    <PlusIcon className='w-6 h-6 group-hover:rotate-90 transition-transform duration-300' />
-                    <span>Criar primeira anotação</span>
-                    <SparklesIcon className='w-5 h-5 group-hover:rotate-12 transition-transform duration-300' />
-                  </button>
-                </div>
+                {/* ...existing code... */}
               </div>
             )}
           </div>
@@ -909,7 +700,7 @@ export default function Home() {
             <div className='absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-custom-start to-custom-primary rounded-l-xl'></div>
             <div className='ml-6'>
               <p className='text-xl text-custom-start leading-relaxed mb-4 font-medium italic'>
-                "{phraseOfDay?.quote || 'Carregando mensagem inspiradora...'}"
+                &ldquo;{phraseOfDay?.quote || 'Carregando mensagem inspiradora...'}&rdquo;
               </p>
               <cite className='text-custom-primary font-semibold block text-right'>
                 — {phraseOfDay?.author || 'Autor desconhecido'}
