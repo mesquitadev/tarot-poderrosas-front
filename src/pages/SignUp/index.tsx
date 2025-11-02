@@ -5,7 +5,7 @@ import logo from '../../assets/PoderRosa_logo_Branca.svg';
 import { useLoading } from '@/hooks/useLoading';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
-import api from '@/services';
+import { useRegisterMutation } from '@/services/authApiSlice';
 
 interface FormData {
   fullName: string; // nome completo
@@ -27,6 +27,7 @@ const SignUp = () => {
   const { loading } = useLoading();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [registerUser, { isLoading: isRegistering }] = useRegisterMutation();
 
   const password = watch('password');
 
@@ -39,7 +40,7 @@ const SignUp = () => {
         email: rest.email,
         password: rest.password,
       };
-      await api.post('/auth/register', payload);
+      await registerUser(payload).unwrap();
       navigate('/');
     } catch (error) {
       console.error('Signup error:', error);
@@ -413,14 +414,14 @@ const SignUp = () => {
               {/* Botão de Submit */}
               <button
                 type='submit'
-                disabled={isSubmitting || loading}
+                disabled={isSubmitting || loading || isRegistering}
                 className={`w-full py-3 px-6 rounded-xl font-semibold text-white transition-all duration-300 transform ${
-                  isSubmitting || loading
+                  isSubmitting || loading || isRegistering
                     ? 'bg-gray-400 cursor-not-allowed'
                     : 'bg-gradient-to-r from-custom-start to-custom-primary hover:from-custom-primary hover:to-custom-start hover:scale-105 hover:shadow-lg active:scale-95'
                 }`}
               >
-                {isSubmitting || loading ? (
+                {isSubmitting || loading || isRegistering ? (
                   <div className='flex items-center justify-center'>
                     <svg
                       className='animate-spin -ml-1 mr-3 h-5 w-5 text-white'
