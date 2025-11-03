@@ -295,7 +295,6 @@ const LocalCopyLinkButton = React.memo(
         {isCopied && (
           <output
             className='absolute -top-8 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10'
-            role='status'
             aria-live='polite'
           >
             Copiado! ✨
@@ -351,7 +350,7 @@ export default function Home() {
                   <ArrowRightIcon className='w-4 h-4' />
                 </button>
                 <button
-                  onClick={() => navigate('/')}
+                  onClick={() => navigate('/login')}
                   className='inline-flex items-center gap-2 bg-white/90 text-custom-primary px-5 py-3 rounded-xl hover:bg-white transition'
                 >
                   Fazer login
@@ -365,30 +364,28 @@ export default function Home() {
         <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
           <div className='bg-white rounded-2xl p-6 shadow border'>
             <div className='flex items-center gap-3 mb-3'>
-              <LightBulbIcon className='w-6 h-6 text-custom-primary' />
-              <h3 className='text-lg font-semibold text-custom-primary'>Carta do Dia</h3>
+              <CalendarDaysIcon className='w-6 h-6 text-custom-primary' />
+              <h3 className='text-lg font-semibold text-custom-primary'>Desafio do Dia</h3>
             </div>
             <p className='text-gray-600 text-sm'>
-              Encontre inspiração diária e conecte-se com sua intuição.
+              Uma reflexão diária para te acompanhar e inspirar.
             </p>
           </div>
           <div className='bg-white rounded-2xl p-6 shadow border'>
             <div className='flex items-center gap-3 mb-3'>
-              <BookOpenIcon className='w-6 h-6 text-purple-600' />
-              <h3 className='text-lg font-semibold text-purple-700'>Três Cartas</h3>
+              <DocumentTextIcon className='w-6 h-6 text-purple-600' />
+              <h3 className='text-lg font-semibold text-purple-700'>Minhas Anotações</h3>
             </div>
             <p className='text-gray-600 text-sm'>
-              Descubra perspectivas sobre passado, presente e futuro.
+              Registre seus sentimentos, ideias e descobertas.
             </p>
           </div>
           <div className='bg-white rounded-2xl p-6 shadow border'>
             <div className='flex items-center gap-3 mb-3'>
-              <StarIcon className='w-6 h-6 text-rose-500' />
-              <h3 className='text-lg font-semibold text-rose-600'>Cinco Cartas</h3>
+              <PencilSquareIcon className='w-6 h-6 text-rose-500' />
+              <h3 className='text-lg font-semibold text-rose-600'>Nova Anotação</h3>
             </div>
-            <p className='text-gray-600 text-sm'>
-              Explore conexões e caminhos com uma leitura mais profunda.
-            </p>
+            <p className='text-gray-600 text-sm'>Comece um novo registro agora mesmo.</p>
           </div>
         </div>
 
@@ -409,7 +406,7 @@ export default function Home() {
                 Criar conta
               </button>
               <button
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/login')}
                 className='border border-white/70 text-white px-5 py-3 rounded-xl font-semibold hover:bg-white/10 transition'
               >
                 Fazer login
@@ -421,13 +418,13 @@ export default function Home() {
     );
   }
 
-  // Conteúdo autenticado (original)
+  // Conteúdo autenticado (com Tarot)
 
   const reflexaoLabel = annotations.length === 1 ? 'reflexão' : 'reflexões';
 
   return (
     <div className='space-y-8 pb-8'>
-      {/* Seção Principal - Banner e Navegação Tarô */}
+      {/* Seção Principal - Banner e Navegação Tarô (apenas autenticado) */}
       <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
         {/* Banner Principal */}
         <div className='lg:col-span-2 relative group overflow-hidden rounded-2xl shadow-xl'>
@@ -454,7 +451,7 @@ export default function Home() {
               className='group w-full bg-gradient-to-r from-custom-primary to-custom-start rounded-2xl p-6 text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] flex items-center'
             >
               <div className='flex-shrink-0 p-3 bg-white/20 rounded-xl group-hover:bg-white/30 transition-all duration-300'>
-                <img src={uma_carta} alt='Icone de uma Carta' className='w-8 h-8' />
+                <img src={uma_carta} alt='Ícone de uma carta' className='w-8 h-8' />
               </div>
               <div className='ml-4 text-left'>
                 <h3 className='text-lg font-semibold mb-1'>Carta do Dia</h3>
@@ -470,7 +467,7 @@ export default function Home() {
               className='group w-full bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl p-6 text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] flex items-center'
             >
               <div className='flex-shrink-0 p-3 bg-white/20 rounded-xl group-hover:bg-white/30 transition-all duration-300'>
-                <img src={tres_cartas} alt='Icone das Três cartas' className='w-8 h-8' />
+                <img src={tres_cartas} alt='Ícone de três cartas' className='w-8 h-8' />
               </div>
               <div className='ml-4 text-left'>
                 <h3 className='text-lg font-semibold mb-1'>Três Cartas</h3>
@@ -486,7 +483,11 @@ export default function Home() {
               className='group w-full bg-gradient-to-r from-rose-500 to-pink-600 rounded-2xl p-6 text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] flex items-center'
             >
               <div className='flex-shrink-0 p-3 bg-white/20 rounded-xl group-hover:bg-white/30 transition-all duration-300'>
-                <img src={cinco_cartas} alt='Icone das Cinco cartas' className='w-8 h-8' />
+                <img
+                  src={cinco_cartas}
+                  alt='Ícone da estrela de cinco cartas'
+                  className='w-8 h-8'
+                />
               </div>
               <div className='ml-4 text-left'>
                 <h3 className='text-lg font-semibold mb-1'>Estrela de Cinco Cartas</h3>

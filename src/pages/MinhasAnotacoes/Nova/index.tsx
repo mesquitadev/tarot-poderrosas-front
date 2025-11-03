@@ -26,7 +26,7 @@ import { ptBR } from 'date-fns/locale';
 interface FormData {
   title: string;
   content: string;
-  category?: string;
+  category: string;
 }
 
 const CriarAnotacao = () => {
